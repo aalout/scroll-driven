@@ -18,6 +18,7 @@
     <link rel="stylesheet" href="/src/styles/allStyle/parallax.css">
     <link rel="stylesheet" href="/src/styles/allStyle/super-scroll.css">
     <link rel="stylesheet" href="/src/styles/allStyle/progress-bar.css">
+    <link rel="stylesheet" href="/src/styles/allStyle/card-stack.css">
     <!-- Icons (Font Awesome for navigation icons) -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
@@ -76,6 +77,12 @@
                     <a href="#progress-bar" class="nav-link" data-title="Индикатор прогресса">
                         <i class="icon fas fa-percent"></i>
                         Индикатор прогресса
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="#card-stack" class="nav-link" data-title="Карточки (Card Stack)">
+                        <i class="icon fas fa-clone"></i>
+                        Карточки (Card Stack)
                     </a>
                 </li>
                 <li class="nav-item">
@@ -272,27 +279,27 @@ img {
 }
 
 .sectionPin {
-  height: 500vh; /* Пространство для скролла */
+  height: 300vh; /* Пространство для скролла */
   overflow: visible;
-  view-timeline-name: --section-pin-tl;
-  view-timeline-axis: block;
+  view-timeline-name: --section-pin-tl; /* Используется для привязки анимации */
+  view-timeline-axis: block; /* Отслеживание по вертикальной оси */
 }
 
 .pin-wrap-sticky {
   height: 100vh;
   width: 100vw;
-  position: sticky;
+  position: sticky; /* Элемент "прилипает" */
   top: 0;
-  overflow-x: hidden;
+  overflow-x: hidden; /* Скрываем горизонтальный скроллбар */
 }
 
 .pin-wrap {
   height: 100vh;
-  width: 250vmax; /* Широкий контейнер */
-  will-change: transform;
-  animation: linear move forwards;
-  animation-timeline: --section-pin-tl;
-  animation-range: contain 0% contain 100%;
+  width: 179vmax; /* Широкий контейнер для горизонтального контента */
+  will-change: transform; /* Оптимизация производительности */
+  animation: linear move forwards; /* Применяем анимацию 'move' */
+  animation-timeline: --section-pin-tl; /* Привязка к таймлайну */
+  animation-range: contain 0% contain 100%; /* Анимация активна, пока контейнер в зоне видимости */
 }</code></pre>
                     </div>
                 </div>
@@ -301,7 +308,6 @@ img {
                     <h3>Вариант с изображениями</h3>
                     <p class="paragraf">Подобный эффект можно применить и к галерее изображений.</p>
                     <div class="example-container tall-example">
-                        <!-- Original Test Animation with Images (unchanged) -->
                         <section class="test">
                             <div class="sticky-pin">
                                 <div class="wrap-pin">
@@ -349,26 +355,42 @@ img {
                     <h3>CSS Реализация</h3>
                     <p class="paragraf">Ключевой момент - использование scroll-timeline для синхронизации маркеров с прокруткой контента.</p>
                     <div class="code-block">
-                        <pre><code class="language-css">[data-component="carousel"] {
+                        <pre><code class="language-css">/* Определяем ключ-кадры для активного состояния маркера */
+@keyframes activate-marker { 
+  to { 
+    background-color: var(--accent-primary); 
+    transform: scale(1.2); 
+    opacity: 1;
+  }
+}
+
+[data-component="carousel"] {
+  /* Создаем именованную область видимости для таймлайна */
   timeline-scope: --carousel;
 }
 
 .entries {
-  scroll-timeline: --carousel x; /* Таймлайн по оси X */
+  /* Привязываем таймлайн к горизонтальной прокрутке списка .entries */
+  scroll-timeline: --carousel x; 
 }
 
 .markers a {
+  /* Анимация для маркеров, привязанная к таймлайну --carousel */
+  animation: activate-marker linear forwards;
   animation-timeline: --carousel;
-  animation-name: marker-inactive;
-  animation-fill-mode: both;
+  animation-fill-mode: both; /* 'both' не требуется с forwards, но оставлено для ясности */
+  
+  /* Динамический расчет диапазона анимации для каждого маркера */
+  /* Анимация активна, когда соответствующий слайд находится в видимой части */
+  animation-range-start: calc((var(--i) - 1) * 25%);
+  animation-range-end: calc(var(--i) * 25%);
 }
 
-/* Расчет диапазона для каждого маркера */
-.markers li:nth-child(1) a { --i: 1; }
-.markers li:nth-child(2) a { --i: 2; }
-.markers a {
-  animation-range: calc((var(--i) - 1) * 20%) calc(var(--i) * 20% + 1px);
-}</code></pre>
+/* Пример задания переменной --i для каждого маркера (обычно делается в HTML или CSS) */
+/* .markers li:nth-child(1) a { --i: 1; } */
+/* .markers li:nth-child(2) a { --i: 2; } */
+/* ... и так далее для всех маркеров */
+</code></pre>
                     </div>
                 </div>
 
@@ -412,20 +434,26 @@ img {
                         <pre><code class="language-css">@keyframes reveal {
   from {
     opacity: 0;
-    transform: translateY(20px);
-    clip-path: inset(0 0 100% 0); /* Эффект "шторки" */
+    transform: translateY(100px); /* Обновлено: было 20px, убран clip-path */
   }
   to {
     opacity: 1;
-    transform: translateY(0);
-    clip-path: inset(0 0 0 0);
+    transform: translateY(0px); /* Обновлено: было translateY(0), убран clip-path */
   }
 }
 
 .revealing-image {
+  /* Задаем имя для view-timeline и ось отслеживания */
+  view-timeline-name: --revealing-image;
+  view-timeline-axis: block;
+
+  /* Применяем анимацию */
   animation: linear reveal both;
-  animation-timeline: view(); /* Таймлайн просмотра */
-  animation-range: entry 0% cover 50%; /* Начинается при входе в область видимости */
+  /* Привязываем анимацию к созданному view-timeline */
+  animation-timeline: --revealing-image;
+  /* Диапазон анимации: начинается, когда элемент входит на 0% в зону видимости,
+     и полностью виден (cover) на 50% этой зоны */
+  animation-range: entry 0% cover 50%;
 }</code></pre>
                     </div>
                 </div>
@@ -464,17 +492,31 @@ img {
 &lt;/ul&gt;</code></pre>
                     </div>
                     <div class="code-block">
-                        <pre><code class="language-css">@keyframes parallax-scroll {
-  from { object-position: 100% 50%; } /* Позиция изображения справа */
-  to   { object-position: 0% 50%; }   /* К левой границе */
-}
-
-.slide img {
-  object-fit: cover;
+                        <pre><code class="language-css">/* Базовые стили для изображения внутри слайда */
+.slide &gt; img {
+  object-fit: cover; /* Масштабирует изображение с сохранением пропорций, обрезая лишнее */
+  object-position: 100% 0; /* Начальная позиция изображения (справа по горизонтали, сверху по вертикали) */
+  display: block; /* Убирает лишние отступы */
   width: 100%;
   height: 100%;
-  animation: linear parallax-scroll both;
-  animation-timeline: view(x); /* Отслеживание по оси X */
+  position: absolute; /* Для точного позиционирования object-position */
+  right: 0; /* Выравнивание по правому краю слайда */
+}
+
+/* Ключевые кадры для анимации параллакса */
+@keyframes adjust-image { /* Имя изменено с parallax-scroll */
+  0% { /* Начальное состояние (соответствует object-position в .slide > img) */
+    object-position: 100% 0; /* Изображение смещено вправо */
+  }
+  100% { /* Конечное состояние */
+    object-position: 0 0;   /* Изображение смещено влево */
+  }
+}
+
+/* Применение анимации к изображениям в слайдах */
+.slide &gt; img {
+  animation: adjust-image linear both; /* 'both' удерживает состояние анимации */
+  animation-timeline: view(x); /* Анимация привязана к горизонтальной прокрутке родительского .slide */
 }</code></pre>
                     </div>
                 </div>
@@ -523,21 +565,51 @@ img {
                     </div>
                     <div class="code-block">
                         <pre><code class="language-css">.super-scroll {
-  view-timeline-name: --svg-scroll-tl;
-  view-timeline-axis: block;
   height: 200vh; /* Пространство для скролла */
+  position: relative;
+  view-timeline-name: --super-scroll-tl; /* Имя таймлайна изменено (было --svg-scroll-tl) */
+  view-timeline-axis: block;
+  overflow: visible;
+  padding-inline: 2vw;
 }
 
-.super-svg-1 circle {
-  animation: draw-circle linear forwards;
-  animation-timeline: --svg-scroll-tl;
-  animation-range: entry 25% contain 75%;
+/* Анимация для первого SVG элемента (круга) */
+.super-svg-1 { /* Селектор изменен, анимация применяется к SVG контейнеру */
+  stroke-dasharray: 251; /* Для эффекта "рисования" */
+  stroke-dashoffset: 251;
+  animation: circle-rotate linear forwards; /* Имя keyframes изменено */
+  animation-timeline: --super-scroll-tl; /* Привязка к таймлайну */
+  animation-range: contain 0% contain 100%; /* Диапазон изменен */
 }
 
+@keyframes circle-rotate {
+  0% {
+    stroke-dashoffset: 251;
+    transform: rotate(0deg);
+  }
+  100% {
+    stroke-dashoffset: 0;
+    transform: rotate(360deg);
+  }
+}
+
+/* Анимация для SVG текста */
 .super-svg-text text {
-  animation: draw-text linear forwards;
-  animation-timeline: --svg-scroll-tl;
-  animation-range: contain 50% exit 0%;
+  stroke-dasharray: 900; /* Для эффекта "рисования" текста */
+  stroke-dashoffset: 900;
+  animation: text-draw linear forwards; /* Имя keyframes изменено */
+  animation-timeline: --super-scroll-tl; /* Привязка к таймлайну */
+  animation-range: contain 0% contain 100%; /* Диапазон изменен */
+  /* ... другие стили для .super-svg-text text из файла super-scroll.css ... */
+}
+
+@keyframes text-draw { /* Новые keyframes для текста */
+  0% {
+    stroke-dashoffset: 900;
+  }
+  100% {
+    stroke-dashoffset: 0;
+  }
 }</code></pre>
                     </div>
                 </div>
@@ -603,12 +675,24 @@ img {
   background-color: var(--accent-primary); /* Цвет из CSS переменных темы */
   z-index: 1000; /* Убеждаемся, что индикатор поверх другого контента */
   
-  /* Применяем анимацию */
+  /* Начальное состояние для плавного появления при переключении вкладок */
+  visibility: hidden;
+  opacity: 0;
+  transition: opacity 0.3s ease, visibility 0s ease 0.3s;
+
+  /* Применяем анимацию заполнения */
   animation: fill-progress linear forwards;
   /* 'forwards' удерживает конечное состояние анимации (width: 100%) */
   
   /* Привязываем анимацию к прокрутке всего документа по вертикальной оси */
   animation-timeline: scroll(root block); 
+}
+
+/* Класс для отображения прогресс-бара, когда активна соответствующая вкладка */
+.page-progress-bar.progress-bar-active-on-tab {
+  visibility: visible;
+  opacity: 1;
+  transition: opacity 0.3s ease, visibility 0s ease 0s; /* Плавное появление */
 }
 
 @keyframes fill-progress {
@@ -706,6 +790,143 @@ img {
                     <p class="paragraf"><strong>Результаты (Chrome Mobile):</strong> На телефоне в chrome работают horizontal scroll, progress, reveal.</p>
                     <p class="paragraf"><strong>Результаты (BrowserStack Safari 17.3):</strong> В browserStack на safari 17.3 работают carousel, horizontal scroll (есть баг), progress и reveal.</p>
                     <p class="paragraf">Также был проверен firefox 127 все отлично работает.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 7: Card Stack Animation -->
+        <section id="card-stack" class="content-section">
+            <div class="section-header">
+                <h2>Эффект "Стопка Карточек" при скролле</h2>
+                <p>Создание анимации, где карточки последовательно "налипают" друг на друга при прокрутке.</p>
+            </div>
+            <div class="section-body">
+
+                <div class="docs-block">
+                    <h3>HTML Структура</h3>
+                    <p class="paragraf">Структура состоит из общего контейнера (<code>.card-stack-example-area</code>), который обеспечивает необходимую высоту для прокрутки, и самих карточек (<code>.card-stack-card</code>), каждая из которых будет анимироваться и "прилипать".</p>
+                    <div class="code-block">
+                        <pre><code class="language-html">&lt;div class="card-stack-example-area"&gt;
+  &lt;div class="card-stack-card card-1"&gt;
+    &lt;h4&gt;Карточка 1&lt;/h4&gt;
+    &lt;p&gt;Содержимое первой карточки...&lt;/p&gt;
+  &lt;/div&gt;
+  &lt;div class="card-stack-card card-2"&gt;
+    &lt;h4&gt;Карточка 2&lt;/h4&gt;
+    &lt;p&gt;Содержимое второй карточки...&lt;/p&gt;
+  &lt;/div&gt;
+  &lt;div class="card-stack-card card-3"&gt;
+    &lt;h4&gt;Карточка 3&lt;/h4&gt;
+    &lt;p&gt;Содержимое третьей карточки...&lt;/p&gt;
+  &lt;/div&gt;
+  &lt;div class="card-stack-card card-4"&gt;
+    &lt;h4&gt;Карточка 4&lt;/h4&gt;
+    &lt;p&gt;Содержимое четвертой карточки...&lt;/p&gt;
+  &lt;/div&gt;
+&lt;/div&gt;</code></pre>
+                    </div>
+                </div>
+
+                <div class="docs-block">
+                    <h3>CSS Реализация</h3>
+                    <p class="paragraf">Ключевые CSS свойства для этого эффекта:</p>
+                    <ul class="ul">
+                        <li class="li"><code>position: sticky;</code> для каждой карточки, чтобы она "залипала" при достижении определенной позиции скролла.</li>
+                        <li class="li">Различные значения <code>top</code> для каждой карточки, чтобы они располагались стопкой.</li>
+                        <li class="li"><code>animation-timeline: view();</code> для запуска анимации появления карточки, когда она входит в область видимости.</li>
+                        <li class="li"><code>animation-range</code> для тонкой настройки момента начала и конца анимации появления.</li>
+                        <li class="li"><code>transform</code> и <code>opacity</code> в кейфреймах для плавного появления и масштабирования.</li>
+                    </ul>
+                    <p class="paragraf">Каждая карточка имеет свою анимацию входа (<code>card-entry</code>), которая срабатывает, когда карточка появляется во вьюпорте. За счет <code>position: sticky</code> и немного отличающихся значений <code>top</code>, карточки фиксируются одна за другой, создавая эффект стопки. Контейнер <code>.card-stack-example-area</code> должен иметь достаточную высоту (например, <code>350vh</code>), чтобы обеспечить пространство для прокрутки и работы sticky-эффекта для всех карточек.</p>
+                    <div class="code-block">
+                        <pre><code class="language-css">.card-stack-example-area {
+  height: 350vh; /* Высота для обеспечения скролла */
+  position: relative;
+  padding-top: 5vh;
+  margin-bottom: 10vh;
+}
+
+.card-stack-card {
+  height: 70vh;
+  width: 70%;
+  max-width: 500px;
+  margin: 0 auto 15vh auto; /* Отступ снизу для эффекта "наезда" */
+  background: var(--bg-elevated, var(--bg-secondary));
+  border: 1px solid var(--border-color);
+  border-radius: 15px;
+  box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+  display: flex;
+  flex-direction: column; 
+  align-items: center;
+  justify-content: center;
+  text-align: center; 
+  padding: 25px; 
+  font-size: 1rem; 
+  color: var(--text-primary);
+  position: sticky;
+  will-change: transform, opacity;
+  opacity: 0;
+  transform: scale(0.9) translateY(30px);
+  animation: card-entry linear forwards;
+  animation-timeline: view();
+  animation-range: entry 10% entry 40%;
+}
+
+.card-stack-card:last-child {
+  margin-bottom: 0;
+}
+
+.card-stack-card h4 {
+  margin: 0 0 10px 0;
+  font-size: 1.8em; 
+  color: var(--accent-primary);
+  font-weight: 600;
+}
+.card-stack-card p {
+  font-size: 1em; 
+  color: var(--text-secondary);
+  margin-top: 0;
+  line-height: 1.6;
+}
+
+/* Разные 'top' для эффекта стопки */
+.card-stack-card.card-1 { top: 10vh; }
+.card-stack-card.card-2 { top: 13vh; }
+.card-stack-card.card-3 { top: 16vh; }
+.card-stack-card.card-4 { top: 19vh; }
+
+@keyframes card-entry {
+  to {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}</code></pre>
+                    </div>
+                </div>
+
+                <div class="docs-block">
+                    <h3>Демонстрация</h3>
+                    <p class="paragraf">Прокрутите вниз, чтобы увидеть, как карточки последовательно появляются и "налипают" друг на друга.</p>
+                    <div class="example-container"> 
+                        <div class="card-stack-example-area">
+                            <div class="card-stack-card card-1">
+                                <h4>Карточка 1</h4>
+                                <p>Это первая карточка в нашей стопке. Она появляется плавно при скролле.</p>
+                            </div>
+                            <div class="card-stack-card card-2">
+                                <h4>Карточка 2</h4>
+                                <p>Вторая карточка наезжает и фиксируется чуть ниже первой, создавая эффект стека.</p>
+                            </div>
+                            <div class="card-stack-card card-3">
+                                <h4>Карточка 3</h4>
+                                <p>Третья карточка продолжает формирование стопки, прилипая к предыдущим.</p>
+                            </div>
+                            <div class="card-stack-card card-4">
+                                <h4>Карточка 4</h4>
+                                <p>Последняя карточка завершает эффект. Прокрутите дальше, чтобы увидеть, как они остаются "налипшими".</p>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </section>
