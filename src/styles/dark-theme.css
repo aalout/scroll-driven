@@ -151,6 +151,12 @@ a {
   padding: 2rem;
 }
 
+@media (max-width: 475px) {
+  .content-wrapper {
+    padding: 1rem;
+  }
+}
+
 .content-section {
   display: none;
   max-width: 1200px;
