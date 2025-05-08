@@ -1,0 +1,718 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Scroll-Animations Lab</title>
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <!-- Fonts -->
+    <link rel="stylesheet" href="/src/styles/allStyle/fonts.css">
+    <!-- Base Theme -->
+    <link rel="stylesheet" href="/src/styles/dark-theme.css">
+    <!-- Animation-specific styles (preserved) -->
+    <link rel="stylesheet" href="/src/styles/allStyle/oneSection-style.css">
+    <link rel="stylesheet" href="/src/styles/allStyle/twoSection-style.css">
+    <link rel="stylesheet" href="/src/styles/allStyle/test.style.css">
+    <link rel="stylesheet" href="/src/styles/allStyle/carousel-style.css">
+    <link rel="stylesheet" href="/src/styles/allStyle/image-reveal.css">
+    <link rel="stylesheet" href="/src/styles/allStyle/parallax.css">
+    <link rel="stylesheet" href="/src/styles/allStyle/super-scroll.css">
+    <link rel="stylesheet" href="/src/styles/allStyle/progress-bar.css">
+    <!-- Icons (Font Awesome for navigation icons) -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <div class="page-progress-bar"></div>
+    <!-- Mobile Menu Toggle (for responsive design) -->
+    <button class="mobile-menu-toggle">
+        <i class="fas fa-bars"></i>
+    </button>
+
+    <!-- Sidebar Navigation -->
+    <aside class="sidebar">
+        <div class="sidebar-header">
+            <h1>Scroll Animations</h1>
+            <p>Interactive demos and code examples</p>
+        </div>
+        <nav>
+            <ul class="nav-links">
+                <li class="nav-item">
+                    <a href="#general-info" class="nav-link" data-title="Обзор технологии Scroll-Driven Animations">
+                        <i class="icon fas fa-book-open"></i>
+                        Обзор технологии
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="#horizontal-scroll" class="nav-link" data-title="Горизонтальный скролл">
+                        <i class="icon fas fa-arrows-left-right"></i>
+                        Горизонтальный скролл
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="#carousel" class="nav-link" data-title="Карусель с маркерами">
+                        <i class="icon fas fa-images"></i>
+                        Карусель с маркерами
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="#reveal" class="nav-link" data-title="Появление изображения">
+                        <i class="icon fas fa-eye"></i>
+                        Появление изображения
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="#parallax" class="nav-link" data-title="Параллакс эффект">
+                        <i class="icon fas fa-layer-group"></i>
+                        Параллакс эффект
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="#svg-animation" class="nav-link" data-title="SVG Анимация">
+                        <i class="icon fas fa-bezier-curve"></i>
+                        SVG Анимация
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="#progress-bar" class="nav-link" data-title="Индикатор прогресса">
+                        <i class="icon fas fa-percent"></i>
+                        Индикатор прогресса
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="#polyfill" class="nav-link" data-title="Polyfill, ограничения и общая информация">
+                        <i class="icon fas fa-info-circle"></i>
+                        Polyfill, ограничения и общая информация
+                    </a>
+                </li>
+            </ul>
+        </nav>
+    </aside>
+
+    <!-- Header (for current section title) -->
+    <header class="header">
+        <h1>Scroll Animations</h1>
+    </header>
+
+    <!-- Main Content Area -->
+    <main class="content-wrapper">
+        <!-- NEW CONTENT SECTION: General Information -->
+        <section id="general-info" class="content-section">
+            <div class="section-header">
+                <h2>Обзор технологии Scroll-Driven Animations</h2>
+                <p>Подробное описание, ключевые концепции, области применения, плюсы и минусы.</p>
+            </div>
+            <div class="section-body">
+                <!-- User's Point 2: Описание технологии -->
+                <div class="docs-block">
+                    <h3>Описание технологии</h3>
+                    <p class="paragraf">Для управления анимацией связанной со скроллом добавлены две концепции это Scroll Timelines and View Timelines или Временная шкала (<a href="https://drafts.csswg.org/scroll-animations-1/" target="_blank" rel="noopener noreferrer">спецификация W3C</a>) прогресса прокрутки и временная шкала просмотра.</p>
+                    <p class="paragraf">По умолчанию у нас есть только одна временная шкала и это временная шкала документа, но с этой спецификацией появляется еще две временных шкалы. Временная шкала прогресса прокрутки (Scroll Progress Timeline) и временная шкала просмотра (View Progress Timeline). Первая закрепляется и отслеживает прогресс прокрутки контейнера в процентах. А вторая отслеживает относительное положение элемента в его контейнере прокрутки.</p>
+                    <p class="paragraf">Общее описание:<br />
+                    <strong>Scroll Progress Timeline</strong> - Позволяет отслеживать прогресс прокрутки контейнера.<br />
+                    <strong>View Progress Timeline</strong> - Позволяет отслеживать прогресс прокрутки конкретного элемента в нашем экране. Или в нашей зоне видимости.</p>
+                    <p class="paragraf">Также это свойство позволяет нам гибко настраивать, в какой момент должна начинаться и заканчиваться анимация. Мы можем запускать анимацию только в момент пересечения объекта с нашей областью видимости или при выходе его из нее. Также можно заканчивать анимацию на середине экрана или начинать как только объект полностью вошел в область видимости.</p>
+
+                    <h4>Scroll Progress Timeline</h4>
+                    <p class="paragraf">Начнем с использования временной шкалы прогресса прокрутки:</p>
+                    <div class="code-block"><pre><code class="language-css">animation: animate-it linear both; /* 'both' для удержания состояния */
+animation-timeline: scroll(root block);
+/* Время анимации не указывается (auto по умолчанию) */</code></pre></div>
+                    <p class="paragraf">В комбинированном свойстве animation нам нужно указать название анимации (animatie-it) функцию анимации (linear), также для корректной работы полифила и показа анимации при загрузке страницы нужно указать fill-mode = both, что позволит анимации быть не прерываться, так как в таком случае после окончания анимации к элементу применяется стили для последнего кадра и у нас не будет прыгать наша анимация к началу, после того, как мы полностью. прокрутили контейнер. Обязательно нужно не указывать время анимации. Для корректной работы нужно оставить его в auto. Можно просто не указывать, так как по умолчанию он auto.</p>
+                    <p class="paragraf">Далее мы создаем временную школу прокрутки, относительно которой и будет происходить анимация. Для этого пользуемся свойством animation-timeline и как значение указываем функцию scroll() которая принимает два значения. Первое это контейнер, который используем для отслеживания прокрутки. Тут может быть 3 значения:</p>
+                    <ul class="ul">
+                        <li class="li"><code>nearest</code>: использует контейнер прокрутки ближайшего предка (по умолчанию).</li>
+                        <li class="li"><code>root</code>: использует область просмотра документа в качестве контейнера прокрутки.</li>
+                        <li class="li"><code>self</code>: использует сам элемент в качестве контейнера прокрутки.</li>
+                    </ul>
+                    <p class="paragraf">И второе это ось. Тут может быть 4 значения:</p>
+                    <ul class="ul">
+                        <li class="li"><code>block</code>: использует меру прогресса вдоль оси блока контейнера прокрутки (по умолчанию).</li>
+                        <li class="li"><code>inline</code>: использует меру прогресса вдоль встроенной оси контейнера прокрутки.</li>
+                        <li class="li"><code>y</code>: использует меру прогресса по оси y контейнера прокрутки.</li>
+                        <li class="li"><code>x</code>: использует меру прогресса по оси x контейнера прокрутки.</li>
+                    </ul>
+                    <p class="paragraf">Так в примере мы привязались к оси прокрутки нашего документа и используем его основную ось, то есть сверху вниз.</p>
+                    <p class="paragraf">Также мы можем использовать именованную временную шкалу прогресса прокрутки. Что позволит нам привязать ее к любому элементу и выбрать ось. После чего указать в другом элементе для выполнения анимации.</p>
+                    <div class="code-block"><pre><code class="language-css">.scroller {
+  scroll-timeline-name: --my-scroller;
+  scroll-timeline-axis: inline; /* или короткая запись: scroll-timeline: --my-scroller inline; */
+}
+
+.scroller .subject {
+  animation: animate-it linear both;
+  animation-timeline: --my-scroller;
+}</code></pre></div>
+
+                    <h4>View Progress Timeline</h4>
+                    <p class="paragraf">Далее рассмотрим возможность работы с временной шкалой просмотра:</p>
+                    <div class="code-block"><pre><code class="language-css">@keyframes reveal {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+img {
+  animation: reveal linear both;
+  animation-timeline: view(); /* Ось по умолчанию 'block' */
+}</code></pre></div>
+                    <p class="paragraf">Значения для свойства animation указываются также, как и для scroll timeline. Но есть отличие в указании значений для свойства animation-timeline. Для задания временной шкалы просмотра нужно использовать функцию view() которая принимает 2 аргумента. Также как и в первом свойстве есть аргумент для задания оси прокрутки. По умолчанию это block.</p>
+                    <p class="paragraf">Второй аргумент отвечает за смещение анимации. Может принимать следующие значения:</p>
+                    <ul class="ul">
+                        <li class="li"><code>cover</code>: представляет полный диапазон временной шкалы просмотра.</li>
+                        <li class="li"><code>entry</code>: представляет диапазон, в течение которого основное поле входит в диапазон видимости прогресса просмотра.</li>
+                        <li class="li"><code>exit</code>: представляет диапазон, в течение которого основной блок выходит из диапазона видимости прогресса просмотра.</li>
+                        <li class="li"><code>entry-crossing</code>: представляет диапазон, в течение которого основной блок пересекает край конечной границы.</li>
+                        <li class="li"><code>exit-crossing</code>: представляет диапазон, в течение которого основной блок пересекает край начальной границы.</li>
+                        <li class="li"><code>contain</code>: представляет диапазон, в течение которого основной блок либо полностью содержится, либо полностью покрывает диапазон видимости прогресса просмотра в области прокрутки. Это зависит от того, выше или короче объект скроллера. (Анимация начинает проигрываться, только когда объект полностью появился в поле зрения)</li>
+                    </ul>
+                    <p class="paragraf">Чтобы установить правила для начала и окончания анимации нужно использовать свойство <code>animation-range</code>. Где мы можем указать любое из вышеперечисленных значений и процент, на сколько оно выполняется. Так для начала анимации при входе в область видимости и окончании, когда объект полностью в нее войдет нужно использовать такие значения:</p>
+                    <div class="code-block"><pre><code class="language-css">animation-range: entry 0% entry 100%;</code></pre></div>
+                    <p class="paragraf">Чтобы лучше разобраться в этих свойствах есть инструмент конструктор, в котором вы можете попробовать их все: <a href="https://scroll-driven-animations.style/tools/view-timeline/ranges" target="_blank" rel="noopener noreferrer">View Timeline Ranges Visualizer</a>.</p>
+                    <p class="paragraf">Нужно обратить внимание, что эти диапазоны получены из не преобразованного основного блока субъекта. Это означает, что такие преобразования, как scale и translate, не учитываются при определении диапазонов. Что позволяет нам использовать смещение и увеличения для создания анимации.</p>
+                    <p class="paragraf">Аналогично scroll timeline мы также можем создавать именованные временные шкалы просмотра, то есть view-timeline. И применять к ним те же значения, а после передавать в свойство animation-timeline.</p>
+                    <p class="paragraf">Например, вот так:</p>
+                    <div class="code-block"><pre><code class="language-css">.revealing-image {
+  view-timeline-name: --revealing-image;
+  view-timeline-axis: block;
+
+  animation: reveal linear both;
+  animation-timeline: --revealing-image;
+  animation-range: entry 25% cover 50%;
+}</code></pre></div>
+                </div>
+
+                <!-- User's Point 3: Где можно использовать -->
+                <div class="docs-block">
+                    <h3>Где можно использовать</h3>
+                    <p class="paragraf">Использование скролл-анимаций распространено на многих сайтах, так как они добавляют разнообразие и интерактивность для пользователя. Такие анимации могут применяться как на простых лендингах и портфолио, так и на более сложных сайтах. Приведем примеры таких анимаций:</p>
+                    <h4>Горизонтальный скролл (Horizontal-scroll)</h4>
+                    <p class="paragraf"><strong>Описание:</strong> При вертикальной прокрутке страницы горизонтальные полосы также перемещаются, создавая эффект пролистывания контента в горизонтальном направлении.</p>
+                    <p class="paragraf"><strong>Применение:</strong></p>
+                    <ul class="ul">
+                        <li class="li">Портфолио и галереи: Визуальные элементы, такие как фотографии, иллюстрации или дизайн-проекты, могут располагаться в длинных горизонтальных рядах. Пользователь, прокручивая страницу вниз, перемещается вдоль этих рядов, открывая новые изображения.</li>
+                        <li class="li">Интернет-магазины и каталоги: В онлайн-каталогах товары могут располагаться в горизонтальных секциях, что позволяет пользователю перемещаться между категориями или коллекциями, прокручивая страницу вниз.</li>
+                    </ul>
+                    <p class="paragraf">Один из наглядных примеров это лендинг который сделан по данной технологии.</p>
+
+                    <h4>Анимация параллакса (Parallax carousel)</h4>
+                    <p class="paragraf"><strong>Описание:</strong> При прокрутке страницы элементы на разных слоях движутся с разной скоростью, создавая эффект глубины и трехмерности. Например, фоновое изображение может двигаться медленнее, чем текст или изображения на переднем плане.</p>
+                    <p class="paragraf"><strong>Применение:</strong> Лендинги и промо-сайты: для создания динамичного визуального эффекта, который привлекает внимание пользователя и делает сайт более запоминающимся.</p>
+
+                    <h4>Анимация карусель c маркерами (Carousel with markers)</h4>
+                    <p class="paragraf"><strong>Описание:</strong> это когда на сайте последовательно показывают несколько изображений, карточек или других элементов в одном месте. Пользователь может переключаться между ними, щелкая стрелки или автоматически, если карусель сама меняет элементы через какое-то время. Внизу карусели обычно есть маленькие кружочки или точки — это маркеры. Они показывают, на каком элементе карусели сейчас находится пользователь. Эти маркеры можно нажать, чтобы сразу перейти к нужному изображению или карточке.</p>
+                    <p class="paragraf"><strong>Применение:</strong> Отзывы и рекомендации: В разделе отзывов карусель может прокручивать несколько отзывов, представленных в виде карточек, с маркерами, указывающими количество доступных отзывов.</p>
+
+                    <h4>Плавное появление элементов (Reveal Image)</h4>
+                    <p class="paragraf"><strong>Описание:</strong> Элементы постепенно проявляются по мере прокрутки страницы. Это может быть текст, изображения, блоки контента или кнопки.</p>
+                    <p class="paragraf"><strong>Применение:</strong> Информационные сайты: для постепенного раскрытия информации, чтобы не перегружать пользователя и удерживать его внимание.</p>
+                </div>
+
+                <!-- User's Point 6: Плюсы и минусы технологии -->
+                <div class="docs-block">
+                    <h3>Плюсы и минусы технологии</h3>
+                    <h4>Плюсы:</h4>
+                    <ul class="ul">
+                        <li class="li"><strong>Производительность:</strong> Технология не использует основной поток выполнения javascript, что позволяет работать плавно и не мешать вычислениям в основном потоке.</li>
+                        <li class="li"><strong>Лаконичность:</strong> Многие популярные анимации можно сделать в несколько строк кода и не нужно ничего придумывать.</li>
+                        <li class="li"><strong>Гибкость:</strong> Можно очень гибко настроить позицию для начала выполнения и окончания анимации.</li>
+                        <li class="li"><strong>Простота в использовании:</strong> Здесь все работает как обычные css анимации, поэтому ничего не нужно изучать дополнительно.</li>
+                    </ul>
+                    <h4>Минусы:</h4>
+                    <ul class="ul">
+                        <li class="li"><strong>Не работает нативно в safari:</strong> Сейчас нет поддержки safari, но есть polyfill, который должен решать эту проблему, но с его использованием тоже есть особенности, о которых поговорим далее.</li>
+                        <li class="li"><strong>Мало примеров, документации и решения разных проблем:</strong> Есть документация в chrome и еще вот этот сайт <a href="https://scroll-driven-animations.style/" target="_blank" rel="noopener noreferrer">https://scroll-driven-animations.style/</a>. Кроме этого никакой информации связанной с технологией нет. И решать разные проблемы связанные с разработкой на этой технологии придется вам самим.</li>
+                    </ul>
+                </div>
+
+                <!-- User's Point 8: Ссылки на источники -->
+                <div class="docs-block">
+                    <h3>Ссылки на источники</h3>
+                    <ul class="ul">
+                        <li class="li"><a href="https://scroll-driven-animations.style/" target="_blank" rel="noopener noreferrer">scroll-driven-animations.style</a> - Сайт с примерами, ссылками на другие ресурсы и конструктором для тестирования анимаций. Вся информация на английском. Нет подробного описания технологии. А также моментов работы с NextJS и polyfill.</li>
+                        <li class="li"><a href="https://habr.com/ru/companies/skillfactory/articles/587792/" target="_blank" rel="noopener noreferrer">Habr: Skillfactory</a> - Перевод части документации. Рассматривают использование анимации при помощи JS, а у нас идет повествовании о css.</li>
+                        <li class="li"><a href="https://habr.com/ru/articles/749794/" target="_blank" rel="noopener noreferrer">Habr: Сравнение производительности</a> - Перевод статьи, где происходит сравнение производительности с новым API на CSS и JS против старых анимаций на JS. Нет подробного описания работы с технологиями и особенности работы с nextJS. Также в сравнении производительности используют только один эффект.</li>
+                        <li class="li"><a href="https://developer.chrome.com/docs/css-ui/scroll-driven-animations" target="_blank" rel="noopener noreferrer">Chrome Developers</a> - Основная документация с теорией того, как все работает и примерами. Эта документация на английском.Нет особенностей работы с polyfill и NextJS.</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 1: Horizontal Scroll -->
+        <section id="horizontal-scroll" class="content-section">
+            <div class="section-header">
+                <h2>Горизонтальный скролл при вертикальной прокрутке</h2>
+                <p>Создание горизонтальной анимации, управляемой вертикальным скроллом страницы</p>
+            </div>
+            <div class="section-body">
+                <div class="docs-block">
+                    <h3>HTML Структура</h3>
+                    <p class="paragraf">Для создания эффекта горизонтального скролла при вертикальной прокрутке, мы используем элемент, который "прилипает" к верхней части экрана, в то время как его содержимое двигается горизонтально.</p>
+                    <div class="code-block">
+                        <pre><code class="language-html">&lt;section class="sectionPin"&gt;
+  &lt;div class="pin-wrap-sticky"&gt;
+    &lt;div class="pin-wrap"&gt;
+      &lt;div class="q"&gt;&lt;/div&gt;
+      &lt;div class="content"&gt;
+        &lt;h1 class="text"&gt;Scroll-driven Animations&lt;/h1&gt;
+        &lt;p class="text-i"&gt;created by &lt;br/&gt; Author Name&lt;/p&gt;
+      &lt;/div&gt;       
+    &lt;/div&gt;
+  &lt;/div&gt;
+&lt;/section&gt;</code></pre>
+                    </div>
+                </div>
+
+                <div class="docs-block">
+                    <h3>CSS Анимация</h3>
+                    <p class="paragraf">Ключевые моменты в CSS: создание timeline-view, sticky-позиционирование и анимация transform с опорой на скролл.</p>
+                    <div class="code-block">
+                        <pre><code class="language-css">@keyframes move {
+  to {
+    transform: translateX(calc(-100% + 100vw));
+  }
+}
+
+.sectionPin {
+  height: 500vh; /* Пространство для скролла */
+  overflow: visible;
+  view-timeline-name: --section-pin-tl;
+  view-timeline-axis: block;
+}
+
+.pin-wrap-sticky {
+  height: 100vh;
+  width: 100vw;
+  position: sticky;
+  top: 0;
+  overflow-x: hidden;
+}
+
+.pin-wrap {
+  height: 100vh;
+  width: 250vmax; /* Широкий контейнер */
+  will-change: transform;
+  animation: linear move forwards;
+  animation-timeline: --section-pin-tl;
+  animation-range: contain 0% contain 100%;
+}</code></pre>
+                    </div>
+                </div>
+
+                <div class="docs-block">
+                    <h3>Вариант с изображениями</h3>
+                    <p class="paragraf">Подобный эффект можно применить и к галерее изображений.</p>
+                    <div class="example-container tall-example">
+                        <!-- Original Test Animation with Images (unchanged) -->
+                        <section class="test">
+                            <div class="sticky-pin">
+                                <div class="wrap-pin">
+                                    <div class="q"></div>
+                                    <div class="container">
+                                        <img class="pin" src="https://img.freepik.com/free-photo/beautiful-mountain-forest-landscape_23-2149063036.jpg?size=626&ext=jpg" alt="Mountain Forest">
+                                        <img class="pin" src="https://img.freepik.com/free-photo/mountainous-nature-landscape-with-river_23-2150705792.jpg?size=626&ext=jpg" alt="Mountain River">
+                                        <img class="pin" src="https://img.freepik.com/free-photo/assortment-of-colored-plant-leaves_23-2149337900.jpg?size=626&ext=jpg" alt="Colored Leaves">
+                                        <img class="pin" src="https://img.freepik.com/free-photo/beautiful-palm-tree-in-vivid-colors_23-2151591807.jpg?size=626&ext=jpg" alt="Palm Tree">
+                                        <img class="pin" src="https://img.freepik.com/premium-photo/guy-on-the-edge-of-the-prelude-to-preikestolen-norway_7509-960.jpg?size=626&ext=jpg&ga=GA1.1.1818441046.1720137018&semt=ais_user" alt="Preikestolen">
+                                    </div>
+                                </div>
+                            </div>
+                        </section>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 2: Carousel with Markers -->
+        <section id="carousel" class="content-section">
+            <div class="section-header">
+                <h2>Карусель с маркерами</h2>
+                <p>Горизонтальная карусель изображений с синхронизированными маркерами</p>
+            </div>
+            <div class="section-body">
+                <div class="docs-block">
+                    <h3>HTML Структура</h3>
+                    <p class="paragraf">Карусель состоит из двух основных компонентов: контейнера с изображениями и маркеров, которые указывают текущее положение.</p>
+                    <div class="code-block">
+                        <pre><code class="language-html">&lt;div data-component="carousel"&gt;
+  &lt;ul class="entries" tabindex="0"&gt;
+    &lt;li class="l"&gt;&lt;a name="carousel_01"&gt;&lt;img class="slide" src="..." alt=""&gt;&lt;/a&gt;&lt;/li&gt;
+    &lt;!-- Другие слайды --&gt;
+  &lt;/ul&gt;
+  &lt;ul class="markers"&gt;
+    &lt;li class="Li"&gt;&lt;a href="#carousel_01"&gt;&lt;/a&gt;&lt;/li&gt;
+    &lt;!-- Другие маркеры --&gt;
+  &lt;/ul&gt;
+&lt;/div&gt;</code></pre>
+                    </div>
+                </div>
+
+                <div class="docs-block">
+                    <h3>CSS Реализация</h3>
+                    <p class="paragraf">Ключевой момент - использование scroll-timeline для синхронизации маркеров с прокруткой контента.</p>
+                    <div class="code-block">
+                        <pre><code class="language-css">[data-component="carousel"] {
+  timeline-scope: --carousel;
+}
+
+.entries {
+  scroll-timeline: --carousel x; /* Таймлайн по оси X */
+}
+
+.markers a {
+  animation-timeline: --carousel;
+  animation-name: marker-inactive;
+  animation-fill-mode: both;
+}
+
+/* Расчет диапазона для каждого маркера */
+.markers li:nth-child(1) a { --i: 1; }
+.markers li:nth-child(2) a { --i: 2; }
+.markers a {
+  animation-range: calc((var(--i) - 1) * 20%) calc(var(--i) * 20% + 1px);
+}</code></pre>
+                    </div>
+                </div>
+
+                <div class="docs-block">
+                    <h3>Демонстрация</h3>
+                    <p class="paragraf">Прокрутите карусель и наблюдайте, как маркеры активируются в соответствии с положением контента.</p>
+                    <div class="example-container">
+                        <!-- Original Carousel Animation (unchanged) -->
+                        <section class="cont">
+                            <div data-component="carousel">
+                                <ul class="entries" tabindex="0">
+                                    <li class="l"><a name="carousel_01"><img class="slide" src="https://img.freepik.com/premium-photo/scenic-view-of-rocks-in-sea-against-clear-sky_1048944-19066138.jpg?size=626&ext=jpg&ga=GA1.1.1143220769.1720183557&semt=ais_user" alt="Rocks in sea" draggable="false"></a></li>
+                                    <li class="l"><a name="carousel_02"><img class="slide" src="https://img.freepik.com/premium-photo/cluster-of-purple-and-blue-leaves_118124-302144.jpg?size=626&ext=jpg&ga=GA1.1.1143220769.1720183557&semt=ais_user" alt="Purple leaves" draggable="false"></a></li>
+                                    <li class="l"><a name="carousel_03"><img class="slide" src="https://img.freepik.com/free-photo/beautiful-scenery-of-green-trees-near-the-body-of-water-over-high-mountains_181624-18193.jpg?size=626&ext=jpg&ga=GA1.1.1143220769.1720183557&semt=ais_user" alt="Green trees" draggable="false"></a></li>
+                                    <li class="l"><a name="carousel_04"><img class="slide" src="https://img.freepik.com/free-photo/mountainous-nature-landscape-with-river_23-2150705796.jpg?size=626&ext=jpg&ga=GA1.1.1143220769.1720183557&semt=ais_user" alt="Mountain river" draggable="false"></a></li>
+                                </ul>
+                                <ul class="markers">
+                                    <li class="Li"><a href="#carousel_01"></a></li>
+                                    <li class="Li"><a href="#carousel_02"></a></li>
+                                    <li class="Li"><a href="#carousel_03"></a></li>
+                                    <li class="Li"><a href="#carousel_04"></a></li>
+                                </ul>
+                            </div>
+                        </section>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 3: Reveal Image -->
+        <section id="reveal" class="content-section">
+            <div class="section-header">
+                <h2>Появление изображения</h2>
+                <p>Эффект появления изображений при скролле страницы</p>
+            </div>
+            <div class="section-body">
+                <div class="docs-block">
+                    <h3>Принцип работы</h3>
+                    <p class="paragraf">Эта техника использует view timeline для анимации появления изображения при его попадании в область видимости.</p>
+                    <div class="code-block">
+                        <pre><code class="language-css">@keyframes reveal {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+    clip-path: inset(0 0 100% 0); /* Эффект "шторки" */
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+    clip-path: inset(0 0 0 0);
+  }
+}
+
+.revealing-image {
+  animation: linear reveal both;
+  animation-timeline: view(); /* Таймлайн просмотра */
+  animation-range: entry 0% cover 50%; /* Начинается при входе в область видимости */
+}</code></pre>
+                    </div>
+                </div>
+
+                <div class="docs-block">
+                    <h3>Демонстрация</h3>
+                    <p class="paragraf">Прокрутите вниз, чтобы увидеть, как изображения появляются, когда входят в область видимости.</p>
+                    <div class="example-container">
+                        <!-- Original Reveal Animation (unchanged) -->
+                        <section class="reveal">
+                            <div class="title center" style="text-align:center; margin-bottom:1em;">
+                                <h3 class="text-two" style="margin-bottom:0.5em;">Изображения с эффектом появления</h3>
+                            </div>
+                            <img class="image revealing-image" src="./src/img/reveal/1.jpg" alt="Anime girl 1">
+                            <img class="image revealing-image" src="./src/img/reveal/2.jpg" alt="Anime girl 2">
+                        </section>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 4: Parallax -->
+        <section id="parallax" class="content-section">
+            <div class="section-header">
+                <h2>Параллакс эффект</h2>
+                <p>Создание эффекта параллакса при прокрутке изображений</p>
+            </div>
+            <div class="section-body">
+                <div class="docs-block">
+                    <h3>HTML и CSS реализация</h3>
+                    <p class="paragraf">При горизонтальной прокрутке слайдов, изображения внутри них двигаются с разной скоростью, создавая эффект глубины.</p>
+                    <div class="code-block">
+                        <pre><code class="language-html">&lt;ul class="slides"&gt;
+  &lt;li class="slide"&gt;&lt;img src="..." alt=""&gt;&lt;/li&gt;
+  &lt;!-- Другие слайды --&gt;
+&lt;/ul&gt;</code></pre>
+                    </div>
+                    <div class="code-block">
+                        <pre><code class="language-css">@keyframes parallax-scroll {
+  from { object-position: 100% 50%; } /* Позиция изображения справа */
+  to   { object-position: 0% 50%; }   /* К левой границе */
+}
+
+.slide img {
+  object-fit: cover;
+  width: 100%;
+  height: 100%;
+  animation: linear parallax-scroll both;
+  animation-timeline: view(x); /* Отслеживание по оси X */
+}</code></pre>
+                    </div>
+                </div>
+
+                <div class="docs-block">
+                    <h3>Демонстрация</h3>
+                    <p class="paragraf">Прокрутите галерею горизонтально и наблюдайте за эффектом параллакса на изображениях.</p>
+                    <div class="example-container">
+                        <!-- Original Parallax Animation (unchanged) -->
+                        <ul class="slides">
+                            <li class="slide"><img src="./src/img/parallax/1.jpg" alt="Parallax 1"></li>
+                            <li class="slide"><img src="./src/img/parallax/2.jpg" alt="Parallax 2"></li>
+                            <li class="slide"><img src="./src/img/parallax/3.jpg" alt="Parallax 3"></li>
+                            <li class="slide"><img src="./src/img/parallax/4.jpg" alt="Parallax 4"></li>
+                            <li class="slide"><img src="./src/img/parallax/5.jpg" alt="Parallax 5"></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 5: SVG Animation -->
+        <section id="svg-animation" class="content-section">
+            <div class="section-header">
+                <h2>SVG Анимация</h2>
+                <p>Анимация SVG элементов при прокрутке страницы</p>
+            </div>
+            <div class="section-body">
+                <div class="docs-block">
+                    <h3>SVG и CSS</h3>
+                    <p class="paragraf">SVG элементы могут быть анимированы с помощью CSS и привязаны к прокрутке страницы.</p>
+                    <div class="code-block">
+                        <pre><code class="language-html">&lt;section class="super-scroll"&gt;
+  &lt;div class="super-svg"&gt;
+    &lt;svg viewBox="0 0 100 100" class="super-svg-1"&gt;
+      &lt;circle cx="50" cy="50" r="40" /&gt;
+    &lt;/svg&gt;
+    &lt;svg viewBox="0 0 800 120" class="super-svg-text"&gt;
+      &lt;text x="50%" y="50%" ...&gt;Scroll-Driven Animation&lt;/text&gt;
+    &lt;/svg&gt;
+    &lt;svg viewBox="0 0 100 100" class="super-svg-2"&gt;
+      &lt;rect x="10" y="10" width="80" height="80" rx="10"/&gt;
+    &lt;/svg&gt;
+  &lt;/div&gt;
+&lt;/section&gt;</code></pre>
+                    </div>
+                    <div class="code-block">
+                        <pre><code class="language-css">.super-scroll {
+  view-timeline-name: --svg-scroll-tl;
+  view-timeline-axis: block;
+  height: 200vh; /* Пространство для скролла */
+}
+
+.super-svg-1 circle {
+  animation: draw-circle linear forwards;
+  animation-timeline: --svg-scroll-tl;
+  animation-range: entry 25% contain 75%;
+}
+
+.super-svg-text text {
+  animation: draw-text linear forwards;
+  animation-timeline: --svg-scroll-tl;
+  animation-range: contain 50% exit 0%;
+}</code></pre>
+                    </div>
+                </div>
+
+                <div class="docs-block">
+                    <h3>Демонстрация</h3>
+                    <p class="paragraf">Прокрутите страницу вниз, чтобы увидеть анимацию SVG элементов.</p>
+                    <div class="example-container tall-example">
+                        <!-- Original SVG Animation (unchanged) -->
+                        <section class="super-scroll">
+                            <div class="super-svg">
+                                <svg viewBox="0 0 100 100" class="super-svg-1"><circle cx="50" cy="50" r="40" /></svg>
+                                <svg viewBox="0 0 800 120" class="super-svg-text" width="60vw" height="120">
+                                    <defs>
+                                        <linearGradient id="superTextGradient" x1="0%" y1="0%" x2="100%" y2="0%">
+                                            <stop offset="0%" stop-color="#3a86ff" stop-opacity="0.8"/>
+                                            <stop offset="60%" stop-color="#8338ec" stop-opacity="0.8"/>
+                                            <stop offset="100%" stop-color="#fff" stop-opacity="0.7"/>
+                                        </linearGradient>
+                                    </defs>
+                                    <text x="50%" y="50%" text-anchor="middle" dominant-baseline="middle" font-size="64" font-family="'Montserrat', Arial, sans-serif" fill="none" stroke="url(#superTextGradient)" stroke-width="3" stroke-linecap="round">Scroll-Driven Animation</text>
+                                </svg>
+                                <svg viewBox="0 0 100 100" class="super-svg-2"><rect x="10" y="10" width="80" height="80" rx="10"/></svg>
+                            </div>
+                        </section>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section: Page Scroll Progress Bar -->
+        <section id="progress-bar" class="content-section">
+            <div class="section-header">
+                <h2>Индикатор прогресса страницы</h2>
+                <p>Создание индикатора, показывающего прогресс прокрутки всей страницы.</p>
+            </div>
+            <div class="section-body">
+                <div class="docs-block">
+                    <h3>HTML Структура</h3>
+                    <p class="paragraf">Для индикатора прогресса нам нужен всего один простой элемент <code>&lt;div&gt;</code>, который будет позиционирован вверху страницы. Этот элемент должен быть прямым потомком <code>&lt;body&gt;</code> для корректной работы с <code>scroll(root block)</code>.</p>
+                    <div class="code-block">
+                        <pre><code class="language-html">&lt;body&gt;
+  &lt;div class="page-progress-bar"&gt;&lt;/div&gt;
+  
+  &lt;!-- Остальное содержимое страницы: сайдбар, хедер, контент --&gt;
+  &lt;aside class="sidebar"&gt;...&lt;/aside&gt;
+  &lt;header class="header"&gt;...&lt;/header&gt;
+  &lt;main class="content-wrapper"&gt;...&lt;/main&gt;
+&lt;/body&gt;</code></pre>
+                    </div>
+                </div>
+
+                <div class="docs-block">
+                    <h3>CSS Анимация</h3>
+                    <p class="paragraf">Ключевые моменты в CSS: фиксированное позиционирование (<code>position: fixed</code>) вверху экрана, начальная ширина 0% и анимация, привязанная к временной шкале прокрутки всего документа (<code>animation-timeline: scroll(root block)</code>). Анимация <code>fill-progress</code> изменяет свойство <code>width</code> элемента от 0% до 100% по мере прокрутки пользователем содержимого страницы.</p>
+                    <div class="code-block">
+                        <pre><code class="language-css">.page-progress-bar {
+  position: fixed; /* Фиксированное позиционирование относительно вьюпорта */
+  top: 0; /* Вверху экрана */
+  left: 0; /* Слева экрана */
+  width: 0%; /* Начальная ширина 0% */
+  height: 5px; /* Высота индикатора */
+  background-color: var(--accent-primary); /* Цвет из CSS переменных темы */
+  z-index: 1000; /* Убеждаемся, что индикатор поверх другого контента */
+  
+  /* Применяем анимацию */
+  animation: fill-progress linear forwards;
+  /* 'forwards' удерживает конечное состояние анимации (width: 100%) */
+  
+  /* Привязываем анимацию к прокрутке всего документа по вертикальной оси */
+  animation-timeline: scroll(root block); 
+}
+
+@keyframes fill-progress {
+  from {
+    width: 0%; /* Анимация начинается с ширины 0% */
+  }
+  to {
+    width: 100%; /* Анимация заканчивается шириной 100% */
+  }
+}</code></pre>
+                    </div>
+                    <p class="paragraf"><code>scroll(root block)</code> указывает, что временная шкала анимации определяется прокруткой корневого элемента документа (обычно <code>&lt;html&gt;</code>) по его блочной (вертикальной) оси.</p>
+                </div>
+
+                <div class="docs-block">
+                    <h3>Демонстрация</h3>
+                    <p class="paragraf">Прокрутите эту страницу вверх и вниз, чтобы увидеть, как индикатор прогресса в самой верхней части окна браузера заполняется. Для наглядности ниже добавлен блок с большой высотой, чтобы обеспечить достаточную область для прокрутки.</p>
+                    <div class="example-container" style="height: 150vh; background-color: var(--bg-tertiary); padding: 2rem; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center;">
+                        <p style="font-size: 1.5rem; color: var(--text-secondary); margin-bottom: 1rem;">Прокручивайте эту область, чтобы увидеть эффект индикатора прогресса страницы.</p>
+                        <p style="font-size: 1rem; color: var(--text-tertiary);">Чем больше вы прокручиваете, тем больше заполняется полоса вверху экрана.</p>
+                        <div style="margin-top: 2rem; font-size: 5rem; opacity: 0.2;"><i class="fas fa-arrow-down"></i></div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 6: Polyfill and Limitations -->
+        <section id="polyfill" class="content-section">
+            <div class="section-header">
+                <h2>Polyfill, поддержка браузерами и производительность</h2>
+                <p>Информация о polyfill для Scroll-Driven Animations, его работе, ограничениях, поддержке в браузерах, вопросах производительности и интеграции с NextJS.</p>
+            </div>
+            <div class="section-body">
+                <div class="docs-block">
+                    <h3>Поддержка браузерами и Polyfill</h3>
+                    <p class="paragraf">CSS scroll-driven animations - относительно новая технология. В Firefox её нужно включать вручную (флаг <code>layout.css.scroll-driven-animations.enabled</code> в <code>about:config</code>), а Safari долгое время не поддерживал нативно и требует polyfill.</p>
+                    <p class="paragraf">Для улучшения кроссбраузерности можно использовать polyfill:</p>
+                    <div class="code-block">
+                        <pre><code class="language-html">&lt;!-- Подключение polyfill --&gt;
+&lt;script src="https://flackr.github.io/scroll-timeline/dist/scroll-timeline.js"&gt;&lt;/script&gt;</code></pre>
+                    </div>
+                    <p class="paragraf">К сожалению, данный метод создания анимаций имеет свои недостатки. В частности, в браузере Firefox требуется отдельное включение этой функции в настройках CSS. Safari не поддерживает указанные свойства. Есть полифилл, который поможет решить проблему совместимости, однако у него есть свои ограничения. Отсутствие документации затрудняет работу, поскольку информация о возможных проблемах может быть доступна только в процессе разработки или в разделе проблем на GitHub.</p>
+                </div>
+
+                <div class="docs-block">
+                    <h3>Как работает Polyfill?</h3>
+                    <p class="paragraf">Подключение осуществляется путем добавления JavaScript-скрипта на вашу страницу. Скрипт можно скачать или подключить через ссылку. Все свойства анимации, связанные с <code>animation-timeline</code>, извлекаются из CSS и переопределяются с помощью JavaScript в соответствии с требованиями, описанными в спецификации для этих свойств: <a href="https://drafts.csswg.org/scroll-animations-1/" target="_blank" rel="noopener noreferrer">W3C Scroll Animations Level 1</a>.</p>
+                    <p class="paragraf">Полифил сканирует CSS правила и переопределяет свойства, связанные с animation-timeline, используя JavaScript.</p>
+                    <img class="img image-center" src="/src/img/polyfill/1.png" alt="CSS Parsing Concept">
+                    <img class="img image-center" src="/src/img/polyfill/2.png" alt="Script Tag Example">
+                </div>
+
+                <div class="docs-block">
+                    <h3>Ограничения Polyfill</h3>
+                    <p class="paragraf"><strong>Проблема с подключением CSS файлов по ссылкам асинхронно:</strong> Так как полифил получает CSS при загрузке. И если он загрузится до загрузки CSS загружаемых асинхронно, то он не сможет их спарсить.</p>
+                    <p class="paragraf"><strong>Проблема с подключением этого полифилла асинхронно:</strong> Так как изначально у нас существует временная шкала документа, которая обычно и используется при анимациях, то при загрузке документа эти анимации сразу начинают выполнятся. А полифилл работает таким образом, что он ловит анимации перед тем, как они исполнятся. И не успевая загрузиться все анимации уже "сыграли" и он не может их обработать.</p>
+                    <p class="paragraf">Существует проблема при подключении CSS-файлов асинхронно. Полифилл получает CSS во время загрузки страницы, и если он загружается до того, как асинхронно загружаемые CSS-файлы будут доступны, полифилл не сможет их корректно обработать.</p>
+                    <p class="paragraf">Также возникают трудности при асинхронной загрузке самого полифилла. Поскольку на момент загрузки документа уже существует временная шкала, используемая для анимаций, анимации начинают выполняться сразу. Полифилл перехватывает анимации до их выполнения, но если он не успевает загрузиться во время, анимации уже могут завершиться, и полифилл не сможет их корректно обработать.</p>
+                    <img class="img image-center" src="/src/img/polyfill/3.png" alt="Async Loading Issue">
+                    <p class="paragraf"><strong>Попытки решения проблемы с асинхронной загрузкой:</strong> Чтобы анимация не закончилась до загрузки нужно отображать компоненты или добавлять стили с анимацией только после загрузки самого полифила.</p>
+                    <p class="paragraf">Дополнительные ограничения из оригинального файла:</p>
+                    <ul class="ul">
+                        <li class="li"><strong>Отсутствие документации:</strong> Многие нюансы выясняются только на практике.</li>
+                        <li class="li"><strong>Производительность:</strong> JavaScript-эмуляция может быть менее эффективной.</li>
+                    </ul>
+                    <p class="paragraf">Несмотря на ограничения, polyfill позволяет использовать scroll-driven animations во всех современных браузерах.</p>
+                </div>
+
+                <div class="docs-block">
+                    <h3>Сравнение производительности (CSS Scroll API vs GSAP)</h3>
+                    <p class="paragraf">Для подобных анимаций принято использовать библиотеки, самая популярная из них это GSAP. Даже зайдя на их официальный сайт при прокрутке у меня были пролаги. Поэтому сравнение по количеству кода будет не объективно, так как исползуя библиотеки также сравнительно легко сделать практически любую анимацию или эффект. Поэтому будем сравнивать производительность и "Плавность работы".</p>
+                    <h4>Horizontal-scroll</h4>
+                    <p class="paragraf"><strong>Тест с библиотекой GSAP</strong></p>
+                    <p class="paragraf">[Изображение: Тест GSAP Horizontal-scroll Performance]</p>
+                    <p class="paragraf"><strong>Тест с CSS scroll API</strong></p>
+                    <p class="paragraf">[Изображение: Тест CSS Scroll API Horizontal-scroll Performance]</p>
+                    <p class="paragraf">Тесты проводятся на MAC с intel i5 3gh. При этом средствами браузера я замедляю его в 20 раз. На первом скриншоте мы видим эффект горизонтального скролла выполненный с помощью библиотеки GSAP. С ней сама загрузка страницы занимает больше времени. И при первой прокрутке страница имеет некоторые фризы. На графике видно, что при скролле у нас процессор нагружается до 100 процентов. На втором графике у нас сначала идет загрузка главной страницы, а потом переход на страницу с  горизонтальным скроллом. И далее при прокрутке загрузка процессора не превышает 50%. Из чего можно сделать вывод, что анимация на css потребляет меньше ресурсов и работает более плавно. А также с ней страница загружается быстрее.</p>
+                    <p class="paragraf">Оригинальный тест из файла (MAC Intel i5 3GHz, замедление CPU x20):</p>
+                    <ul class="ul">
+                        <li class="li"><strong>GSAP:</strong> Более долгая загрузка страницы, фризы при первой прокрутке, загрузка CPU до 100%.</li>
+                        <li class="li"><strong>CSS Scroll API:</strong> Быстрая загрузка, загрузка CPU не выше 50% при прокрутке.</li>
+                    </ul>
+                    <p class="paragraf"><strong>Вывод:</strong> Анимация на CSS потребляет меньше ресурсов, работает плавнее и страницы загружаются быстрее.</p>
+                </div>
+
+                <div class="docs-block">
+                    <h3>Работа с NextJS и Polyfill</h3>
+                    <h4>Проблемы работы с NextJS:</h4>
+                    <p class="paragraf">Работа с nextJS. Все тесты проводились на nextJS версии 14.2.5, app router. Был подключен полифил в layout с помощью ссылки на скрипт, из документации к полифилу. Далее тестируем разные анимации: Я взял 4 эффекта, это carousel, horizontal scroll, progress и reveal.</p>
+                    <p class="paragraf"><strong>Результаты (Chrome Desktop):</strong> Все 4 эффекта отлично работают на компьютере в браузере chrome.</p>
+                    <p class="paragraf"><strong>Результаты (Chrome Mobile):</strong> На телефоне в chrome работают horizontal scroll, progress, reveal.</p>
+                    <p class="paragraf"><strong>Результаты (BrowserStack Safari 17.3):</strong> В browserStack на safari 17.3 работают carousel, horizontal scroll (есть баг), progress и reveal.</p>
+                    <p class="paragraf">Тестирование на версии "next": "^13.5.2" page router. Подключение полифила аналогичное.</p>
+                    <p class="paragraf"><strong>Результаты (Chrome Desktop):</strong> Все 4 эффекта отлично работают на компьютере в браузере chrome.</p>
+                    <p class="paragraf"><strong>Результаты (Chrome Mobile):</strong> На телефоне в chrome работают horizontal scroll, progress, reveal.</p>
+                    <p class="paragraf"><strong>Результаты (BrowserStack Safari 17.3):</strong> В browserStack на safari 17.3 работают carousel, horizontal scroll (есть баг), progress и reveal.</p>
+                    <p class="paragraf">Также был проверен firefox 127 все отлично работает.</p>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- JavaScript -->
+    <script src="/src/js/tabs.js"></script>
+</body>
+</html>

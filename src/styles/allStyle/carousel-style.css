@@ -1,0 +1,135 @@
+@supports (animation-timeline: view()) {
+    @keyframes activate-marker { 
+        to { 
+            background-color: var(--accent-primary); 
+            transform: scale(1.2); 
+            opacity: 1;
+        }
+    }
+
+    [data-component="carousel"] {
+        timeline-scope: --carousel;
+
+        .entries {
+            scroll-timeline: --carousel x;
+        }
+
+        .markers a {
+            animation: activate-marker linear forwards; 
+            animation-timeline: --carousel;
+            animation-range-start: calc((var(--i) - 1) * 25%);
+            animation-range-end: calc(var(--i) * 25%);
+        }
+    }
+}
+
+[data-component="carousel"] {
+    position: relative;
+    width: 100%; 
+    max-width: 900px; 
+    margin: 2rem auto; 
+    padding: 0; 
+}
+
+.entries {
+    display: flex;
+    height: auto; 
+    margin: 0;
+    overflow-y: hidden;
+    overflow-x: auto; 
+    scroll-snap-type: x mandatory;
+    scroll-behavior: smooth;
+    padding: 1rem 0; 
+    gap: 1rem; 
+}
+
+.entries::-webkit-scrollbar {
+    height: 8px;
+}
+.entries::-webkit-scrollbar-track {
+    background: var(--bg-tertiary);
+    border-radius: 4px;
+}
+.entries::-webkit-scrollbar-thumb {
+    background: var(--accent-primary);
+    border-radius: 4px;
+}
+
+
+.l { 
+    scroll-snap-align: center;
+    flex: 0 0 calc(100% - 2rem); 
+    margin: 0 1rem; 
+    display: flex; 
+}
+
+.l:first-child {
+    margin-left: 1rem; 
+}
+.l:last-child {
+    margin-right: 1rem; 
+}
+
+
+.l a {
+    display: flex; 
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    border-radius: 12px; 
+    overflow: hidden; 
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3); 
+}
+
+.slide { 
+    display: block;
+    width: 100%;
+    height: 100%; 
+    max-height: 500px; 
+    object-fit: cover;
+    border-radius: 0; 
+    box-shadow: none; 
+    transition: transform 0.4s ease;
+}
+
+.l a:hover .slide {
+    transform: scale(1.05);
+}
+
+.markers {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative; 
+    margin-top: 1.5rem; 
+}
+
+.markers li {
+    margin: 0 6px; 
+    list-style-type: none;
+}
+
+.markers a { 
+    display: block; 
+    width: 24px; 
+    height: 8px;  
+    border-radius: 4px; 
+    background-color: var(--bg-tertiary); 
+    border: 1px solid var(--border-color);
+    cursor: pointer;
+    pointer-events: auto;
+    transition: background-color 0.3s ease, transform 0.3s ease, opacity 0.3s ease;
+    opacity: 0.6;
+    transform: scale(1); 
+}
+
+.markers a:hover {
+    background-color: var(--accent-secondary);
+    opacity: 0.8;
+}
+
+.markers li:nth-child(1) a { --i: 1; } 
+.markers li:nth-child(2) a { --i: 2; }
+.markers li:nth-child(3) a { --i: 3; }
+.markers li:nth-child(4) a { --i: 4; }
+

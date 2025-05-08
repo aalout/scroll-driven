@@ -1,0 +1,57 @@
+@keyframes movex {
+    to {
+        transform: translateX(calc(-100% + 100vw));
+    }
+}
+
+.test {
+    height: 500vh;
+    overflow: visible;
+    view-timeline-name: --section-test-tl;
+    view-timeline-axis: block;
+}
+
+.sticky-pin {
+    height: 100vh;
+    width: 100vw;
+    position: sticky;
+    top: 0;
+    overflow-x: hidden;
+}
+
+.wrap-pin {
+    height: 100vh;
+    width: 180vmax;
+    will-change: transform;
+    animation: linear movex forwards;
+    animation-timeline: --section-test-tl;
+    animation-range: contain 0% contain 100%;
+}
+
+.container {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    padding: 1rem;
+}
+
+.pin {
+    width: 450px;
+    height: auto;
+    margin: 0 20px;
+    border-radius: var(--border-radius);
+    box-shadow: var(--box-shadow);
+    transition: transform 0.3s ease;
+}
+
+.pin:hover {
+    transform: translateY(-10px);
+}
+
+.text-t {
+    text-align: center;
+    font-size: 2.5rem;
+    color: var(--dark-color);
+    margin: 2rem 0;
+}
+

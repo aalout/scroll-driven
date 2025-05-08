@@ -1,0 +1,110 @@
+.sectiontwo {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    padding: 2rem;
+}
+.title {
+    background: #141414;
+    padding: 2.5rem;
+    border-radius: var(--border-radius);
+    box-shadow: var(--box-shadow);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    max-width: 1000px;
+    width: 100%;
+    margin: 2rem auto;
+}
+.text-two {
+    color: var(--dark-color);
+    font-size: 2.2rem;
+    font-weight: 700;
+    margin: 1.5rem 0;
+    padding: 1.5rem;
+    text-align: center;
+    background-color: #141414;
+    border-radius: var(--border-radius);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+    position: relative;
+    overflow: hidden;
+}
+.text-two span {
+    font-size: 1.4rem;
+    line-height: 1.4;
+    display: inline-block;
+    margin-bottom: 0.5rem;
+}
+.paragraf {
+    font-size: 1.1rem;
+    line-height: 1.8;
+    color: var(--text-color);
+    padding: 1rem 1.5rem;
+    margin-bottom: 1.5rem;
+}
+img {
+    width: 100%;
+    max-width: 600px;
+    height: auto;
+    border-radius: 8px;
+    margin: 1.5rem auto;
+    display: block;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+}
+.ul {
+    list-style-type: none;
+    padding: 0;
+    margin: 1.5rem 0;
+}
+.li {
+    background: #232323;
+    margin: 0.8rem 0;
+    padding: 1rem 1.5rem;
+    border-radius: 8px;
+    font-size: 1rem;
+    color: var(--text-color);
+    line-height: 1.6;
+    position: relative;
+    border-left: 4px solid var(--primary-color);
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+}
+.li span {
+    font-weight: 600;
+    color: var(--primary-color);
+}
+.li:before {
+    content: '✓ ';
+    color: var(--primary-color);
+    font-weight: bold;
+}
+.text-t {
+    color: var(--primary-color);
+    font-size: 2.2rem;
+    font-weight: 700;
+    margin-top: 1.5rem;
+    padding: 1.5rem;
+}
+.img {
+    width: 100%;
+    max-width: 700px;
+    height: auto;
+    margin: 1.5rem auto;
+    display: block;
+}
+@media (max-width: 768px) {
+    .text-two {
+        font-size: 1.8rem;
+        padding: 1rem;
+    }
+    
+    .paragraf {
+        font-size: 1rem;
+        padding: 0.8rem;
+    }
+}
+hr {
+    border: 0;
+    height: 1px;
+    background: #e0e0e0;
+    margin: 1rem 0;
+}
