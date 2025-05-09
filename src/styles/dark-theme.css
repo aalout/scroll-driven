@@ -194,6 +194,12 @@ a {
   padding: 2rem;
 }
 
+@media (max-width: 768px) {
+  .section-body {
+    padding: 1rem;
+  }
+}
+
 .docs-block {
   margin-bottom: 3rem;
 }
@@ -234,6 +240,12 @@ code {
   border: 1px solid var(--border-color);
   position: relative;
   overflow: visible;
+}
+
+@media (max-width: 768px) {
+  .example-container {
+    margin-bottom: 20rem;
+  }
 }
 
 .tall-example {
@@ -315,7 +327,57 @@ code {
   margin-bottom: 2rem;
 }
 
+/* Styles for Second-Level Recipe Tabs */
+.recipes-nav {
+  margin-bottom: 2rem; /* Space below the recipe tabs nav */
+  padding-bottom: 1rem;
+  border-bottom: 1px solid var(--border-color);
+}
 
+.recipes-nav-links {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-wrap: wrap; /* Allow tabs to wrap on smaller screens */
+  gap: 0.75rem; /* Space between tab items */
+}
+
+.recipes-nav-links li {
+  margin: 0;
+}
+
+.recipe-nav-link {
+  display: block;
+  padding: 0.6rem 1rem;
+  text-decoration: none;
+  color: var(--text-secondary);
+  background-color: var(--bg-tertiary);
+  border: 1px solid var(--border-color);
+  border-radius: 6px;
+  font-size: 0.9rem;
+  font-weight: 500;
+  transition: var(--transition-standard);
+}
+
+.recipe-nav-link:hover {
+  background-color: rgba(98, 0, 238, 0.1); /* Using accent color with alpha */
+  color: var(--text-primary);
+  border-color: var(--accent-primary);
+}
+
+.recipe-nav-link.active {
+  background-color: var(--accent-primary);
+  color: white;
+  border-color: var(--accent-primary);
+}
+
+/* Hide recipe example sections by default if they are not part of an active recipe tab */
+/* We will control this primarily via JS by adding/removing .active to the main content-section AND the recipe-example-section */
+.recipe-example-section:not(.active) {
+    display: none;
+    opacity: 0; /* ensure it's hidden for transitions */
+}
 
 @media (max-width: 1024px) {
   body {

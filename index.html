@@ -38,45 +38,9 @@
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a href="#horizontal-scroll" class="nav-link" data-title="Горизонтальный скролл">
-                        <i class="icon fas fa-arrows-left-right"></i>
-                        Горизонтальный скролл
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a href="#carousel" class="nav-link" data-title="Карусель с маркерами">
-                        <i class="icon fas fa-images"></i>
-                        Карусель с маркерами
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a href="#reveal" class="nav-link" data-title="Появление изображения">
-                        <i class="icon fas fa-eye"></i>
-                        Появление изображения
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a href="#parallax" class="nav-link" data-title="Параллакс эффект">
-                        <i class="icon fas fa-layer-group"></i>
-                        Параллакс эффект
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a href="#svg-animation" class="nav-link" data-title="SVG Анимация">
-                        <i class="icon fas fa-bezier-curve"></i>
-                        SVG Анимация
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a href="#progress-bar" class="nav-link" data-title="Индикатор прогресса">
-                        <i class="icon fas fa-percent"></i>
-                        Индикатор прогресса
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a href="#card-stack" class="nav-link" data-title="Карточки (Card Stack)">
-                        <i class="icon fas fa-clone"></i>
-                        Карточки (Card Stack)
+                    <a href="#recipes-container" class="nav-link" data-title="Рецепты Scroll-Driven Animations">
+                        <i class="icon fas fa-flask"></i>
+                        Рецепты
                     </a>
                 </li>
                 <li class="nav-item">
@@ -208,7 +172,34 @@ img {
             </div>
         </section>
 
-        <section id="horizontal-scroll" class="content-section">
+        <!-- NEW CONTENT SECTION: Recipes Container -->
+        <section id="recipes-container" class="content-section">
+            <div class="section-header">
+                <h2>Рецепты Scroll-Driven Animations</h2>
+                <p>Коллекция готовых примеров и техник.</p>
+            </div>
+            <div class="section-body">
+                <!-- Second-level tab navigation will go here -->
+                <nav class="recipes-nav">
+                    <ul class="recipes-nav-links">
+                        <li><a href="#horizontal-scroll" class="recipe-nav-link" data-title="Горизонтальный скролл">Горизонтальный скролл</a></li>
+                        <li><a href="#carousel" class="recipe-nav-link" data-title="Карусель с маркерами">Карусель</a></li>
+                        <li><a href="#reveal" class="recipe-nav-link" data-title="Появление изображения">Появление изображения</a></li>
+                        <li><a href="#parallax" class="recipe-nav-link" data-title="Параллакс эффект">Параллакс</a></li>
+                        <li><a href="#svg-animation" class="recipe-nav-link" data-title="SVG Анимация">SVG Анимация</a></li>
+                        <li><a href="#progress-bar" class="recipe-nav-link" data-title="Индикатор прогресса">Индикатор прогресса</a></li>
+                        <li><a href="#card-stack" class="recipe-nav-link" data-title="Карточки (Card Stack)">Стопка Карточек</a></li>
+                    </ul>
+                </nav>
+
+                <!-- Existing example sections will be controlled by JS to appear here -->
+                <!-- For simplicity, they remain at the top level in HTML but are managed by JS -->
+            </div>
+        </section>
+        <!-- END Recipes Container -->
+
+        <!-- Section 1: Horizontal Scroll -->
+        <section id="horizontal-scroll" class="content-section recipe-example-section">
             <div class="section-header">
                 <h2>Горизонтальный скролл при вертикальной прокрутке</h2>
                 <p>Создание горизонтальной анимации, управляемой вертикальным скроллом страницы</p>
@@ -291,7 +282,8 @@ img {
             </div>
         </section>
 
-        <section id="carousel" class="content-section">
+        <!-- Section 2: Carousel with Markers -->
+        <section id="carousel" class="content-section recipe-example-section">
             <div class="section-header">
                 <h2>Карусель с маркерами</h2>
                 <p>Горизонтальная карусель изображений с синхронизированными маркерами</p>
@@ -382,7 +374,8 @@ img {
             </div>
         </section>
 
-        <section id="reveal" class="content-section">
+        <!-- Section 3: Reveal Image -->
+        <section id="reveal" class="content-section recipe-example-section">
             <div class="section-header">
                 <h2>Появление изображения</h2>
                 <p>Эффект появления изображений при скролле страницы</p>
@@ -435,7 +428,8 @@ img {
             </div>
         </section>
 
-        <section id="parallax" class="content-section">
+        <!-- Section 4: Parallax -->
+        <section id="parallax" class="content-section recipe-example-section">
             <div class="section-header">
                 <h2>Параллакс эффект</h2>
                 <p>Создание эффекта параллакса при прокрутке изображений</p>
@@ -496,7 +490,8 @@ img {
             </div>
         </section>
 
-        <section id="svg-animation" class="content-section">
+        <!-- Section 5: SVG Animation -->
+        <section id="svg-animation" class="content-section recipe-example-section">
             <div class="section-header">
                 <h2>SVG Анимация</h2>
                 <p>Анимация SVG элементов при прокрутке страницы</p>
@@ -596,7 +591,8 @@ img {
             </div>
         </section>
 
-        <section id="progress-bar" class="content-section">
+        <!-- Section: Page Scroll Progress Bar -->
+        <section id="progress-bar" class="content-section recipe-example-section">
             <div class="section-header">
                 <h2>Индикатор прогресса страницы</h2>
                 <p>Создание индикатора, показывающего прогресс прокрутки всей страницы.</p>
@@ -674,6 +670,7 @@ img {
             </div>
         </section>
 
+        <!-- Section 6: Polyfill and Limitations -->
         <section id="polyfill" class="content-section">
             <div class="section-header">
                 <h2>Polyfill, поддержка браузерами и производительность</h2>
@@ -732,7 +729,7 @@ img {
         </section>
 
         <!-- Section 7: Card Stack Animation -->
-        <section id="card-stack" class="content-section">
+        <section id="card-stack" class="content-section recipe-example-section">
             <div class="section-header">
                 <h2>Эффект "Стопка Карточек" при скролле</h2>
                 <p>Создание анимации, где карточки последовательно "налипают" друг на друга при прокрутке.</p>

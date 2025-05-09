@@ -78,16 +78,14 @@
 
 @media (max-width: 480px) {
     .wrap-pin {
-        width: 300vmax;
+        width: 200vmax;
     }
     .pin {
-        width: 200px;
+        width: 355px;
         margin: 0 5px;
     }
     .text-t {
         font-size: 1.5rem;
         margin: 1rem 0;
-    }
-    .container {
     }
 }
