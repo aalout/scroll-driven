@@ -96,10 +96,40 @@ img {
         font-size: 1.8rem;
         padding: 1rem;
     }
-    
     .paragraf {
         font-size: 1rem;
         padding: 0.8rem;
+    }
+    .title {
+        padding: 1.5rem;
+    }
+    .text-t {
+        font-size: 1.8rem;
+        padding: 1rem;
+    }
+    .li {
+        padding: 0.8rem 1rem;
+        font-size: 0.95rem;
+    }
+}
+@media (max-width: 480px) {
+    .text-two {
+        font-size: 1.5rem;
+    }
+    .paragraf {
+        font-size: 0.9rem;
+    }
+    .title {
+        padding: 1rem;
+        margin: 1rem auto;
+    }
+    .text-t {
+        font-size: 1.5rem;
+        padding: 0.8rem;
+    }
+    .li {
+        padding: 0.6rem 0.8rem;
+        font-size: 0.9rem;
     }
 }
 hr {

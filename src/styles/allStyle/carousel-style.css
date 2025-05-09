@@ -133,3 +133,16 @@
 .markers li:nth-child(3) a { --i: 3; }
 .markers li:nth-child(4) a { --i: 4; }
 
+@media (max-width: 768px) {
+    .markers a {
+        height: 30px;
+        width: 30px;
+    }
+    .markers li {
+        margin: 0 15px; 
+    }
+
+    .entries {
+        height: 500px;
+    }
+}

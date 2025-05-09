@@ -315,6 +315,8 @@ code {
   margin-bottom: 2rem;
 }
 
+
+
 @media (max-width: 1024px) {
   body {
     grid-template-areas:
@@ -355,8 +357,14 @@ code {
   }
 }
 
-@media (min-width: 1025px) {
+@media (min-width: 1023px) {
   .mobile-menu-toggle {
     display: none;
   }
 } 
+
+@media (max-width: 768px) {
+  .title.center {
+    display: none;
+  }
+}

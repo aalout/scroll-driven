@@ -55,3 +55,39 @@
     margin: 2rem 0;
 }
 
+@media (max-width: 768px) {
+    .test {
+        height: auto;
+        min-height: 300vh;
+    }
+    .wrap-pin {
+        width: 250vmax;
+    }
+    .container {
+        padding: 0.5rem;
+    }
+    .pin {
+        width: 300px;
+        margin: 0 10px;
+    }
+    .text-t {
+        font-size: 2rem;
+        margin: 1.5rem 0;
+    }
+}
+
+@media (max-width: 480px) {
+    .wrap-pin {
+        width: 300vmax;
+    }
+    .pin {
+        width: 200px;
+        margin: 0 5px;
+    }
+    .text-t {
+        font-size: 1.5rem;
+        margin: 1rem 0;
+    }
+    .container {
+    }
+}

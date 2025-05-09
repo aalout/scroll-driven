@@ -1,70 +1,70 @@
 .card-stack-example-area {
-  height: 350vh; /* Provides ample scroll height for the effect */
+  height: 350vh;
   position: relative;
-  padding-top: 5vh; /* Space above the first card */
-  margin-bottom: 10vh; /* Space after the card stack area */
+  padding-top: 5vh;
+  margin-bottom: 10vh;
 }
 
 .card-stack-card {
-  height: 70vh; /* Height of each card */
+  height: 70vh;
   width: 70%;
-  max-width: 500px; /* Maximum width for larger screens */
-  margin: 0 auto 15vh auto; /* Centered, with bottom margin to create space for next card to scroll into */
-  background: var(--bg-elevated, var(--bg-secondary)); /* Elevated background, fallback to secondary */
+  max-width: 500px;
+  margin: 0 auto 15vh auto;
+  background: var(--bg-elevated, var(--bg-secondary));
   border: 1px solid var(--border-color);
-  border-radius: 15px; /* Rounded corners */
-  box-shadow: 0 8px 20px rgba(0,0,0,0.1); /* Subtle shadow for depth */
+  border-radius: 15px;
+  box-shadow: 0 8px 20px rgba(0,0,0,0.1);
   display: flex;
-  flex-direction: column; /* Stack h4 and p vertically */
-  align-items: center; /* Center content horizontally */
-  justify-content: center; /* Center content vertically */
-  text-align: center; /* Center text */
-  padding: 25px; /* Inner padding for content */
-  font-size: 1rem; /* Base font size for card content */
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 25px;
+  font-size: 1rem;
   color: var(--text-primary);
-  position: sticky; /* Core of the stacking effect */
-  will-change: transform, opacity; /* Performance hint for animations */
-
-  /* Initial state for entry animation */
+  position: sticky;
+  will-change: transform, opacity;
   opacity: 0;
   transform: scale(0.9) translateY(30px);
-
-  /* Animation setup */
   animation: card-entry linear forwards;
-  animation-timeline: view(); /* Each card animates based on its own visibility */
-  /* Animation triggers when 10% of the card is visible, completes when 40% is visible */
+  animation-timeline: view();
   animation-range: entry 10% entry 40%;
 }
 
 .card-stack-card:last-child {
-  margin-bottom: 0; /* No extra margin for the last card */
+  margin-bottom: 0;
 }
 
-/* Styling for text content within cards */
 .card-stack-card h4 {
-  margin: 0 0 10px 0; /* Bottom margin for the heading */
-  font-size: 1.8em; /* Larger font size for the heading, relative to card's font-size */
+  margin: 0 0 10px 0;
+  font-size: 1.8em;
   color: var(--accent-primary);
   font-weight: 600;
 }
 
 .card-stack-card p {
-  font-size: 1em; /* Relative to card's font-size */
+  font-size: 1em;
   color: var(--text-secondary);
   margin-top: 0;
   line-height: 1.6;
 }
 
-/* Staggered 'top' values for each card to create the stacking visual */
-.card-stack-card.card-1 { top: 10vh; } /* First card sticks 10vh from the top */
-.card-stack-card.card-2 { top: 13vh; } /* Second card sticks 3vh below the previous one's sticky point */
-.card-stack-card.card-3 { top: 16vh; } /* Continues the pattern */
+.card-stack-card.card-1 { top: 10vh; }
+.card-stack-card.card-2 { top: 13vh; }
+.card-stack-card.card-3 { top: 16vh; }
 .card-stack-card.card-4 { top: 19vh; }
 
-/* Keyframes for the card entry animation */
 @keyframes card-entry {
   to {
     opacity: 1;
-    transform: scale(1) translateY(0); /* Animates to full opacity and normal scale/position */
+    transform: scale(1) translateY(0);
   }
 } 
+
+@media (max-width: 768px) {
+    .card-stack-card {
+        width: 100%;
+    }
+}
+
+

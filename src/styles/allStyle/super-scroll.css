@@ -79,6 +79,8 @@
   background: none;
 }
 
+
+
 .super-svg-1, .super-svg-2 {
   background: none;
   box-shadow: none;
@@ -135,6 +137,26 @@
   100% {
     stroke-dashoffset: 0;
     transform: rotate(-360deg);
+  }
+}
+
+@media (max-width: 768px) {
+  .super-svg {
+      flex-direction: column;
+  }
+
+  .super-svg-1 {
+    width: 18vw;
+    height: 18vw;
+    min-width: unset;
+    min-height: unset;
+  }
+
+  .super-svg-2 {
+    width: 18vw;
+    height: 18vw;
+    min-width: unset;
+    min-height: unset;
   }
 }
 
