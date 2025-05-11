@@ -10,7 +10,7 @@
 .super-bg, .super-mid, .super-front, .super-light, .super-svg, .super-text {
   position: sticky;
   top: 0;
-  width: 100vw;
+  /* width: 100vw; */
   height: 100vh;
   pointer-events: none;
 }

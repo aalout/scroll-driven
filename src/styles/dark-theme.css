@@ -149,6 +149,7 @@ a {
 .content-wrapper {
   grid-area: main;
   padding: 2rem;
+  overflow: auto;
 }
 
 @media (max-width: 475px) {

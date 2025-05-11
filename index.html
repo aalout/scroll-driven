@@ -16,8 +16,8 @@
     <link rel="stylesheet" href="/src/styles/allStyle/super-scroll.css">
     <link rel="stylesheet" href="/src/styles/allStyle/progress-bar.css">
     <link rel="stylesheet" href="/src/styles/allStyle/card-stack.css">
-    <link rel="stylesheet" href="/src/styles/allStyle/cover-reveal.css">
     <link rel="stylesheet" href="/src/styles/allStyle/cascading-text-reveal.css">
+    <link rel="stylesheet" href="/src/styles/allStyle/scaling-images.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 <body>
@@ -191,8 +191,8 @@ img {
                         <li><a href="#svg-animation" class="recipe-nav-link" data-title="SVG Анимация">SVG Анимация</a></li>
                         <li><a href="#progress-bar" class="recipe-nav-link" data-title="Индикатор прогресса">Индикатор прогресса</a></li>
                         <li><a href="#card-stack" class="recipe-nav-link" data-title="Карточки (Card Stack)">Стопка Карточек</a></li>
-                        <li><a href="#cover-reveal" class="recipe-nav-link" data-title="Появление контента из изображения">Появление контента из изображения</a></li>
                         <li><a href="#cascading-text" class="recipe-nav-link" data-title="Каскадное появление текста">Каскадное появление текста</a></li>
+                        <li><a href="#scaling-images" class="recipe-nav-link" data-title="Масштабирование изображений">Масштабирование изображений</a></li>
                     </ul>
                 </nav>
             </div>
@@ -863,157 +863,6 @@ img {
             </div>
         </section>
 
-        <section id="cover-reveal" class="content-section recipe-example-section">
-            <div class="section-header">
-                <h2>Cover Reveal Эффект</h2>
-                <p>Эффект, при котором одно изображение или секция плавно "уходит", открывая контент под ней.</p>
-            </div>
-            <div class="section-body">
-                <div class="docs-block">
-                    <h3>HTML Структура</h3>
-                    <p class="paragraf">Для этого эффекта нам понадобится контейнер-обертка (<code>.cover-reveal-demo-area</code>), который будет определять общую высоту для анимации и служить якорем для <code>view-timeline</code>. Внутри него размещаются два основных блока: контент, который будет скрыт изначально (<code>.cover-reveal-content-behind</code>), и "обложка" (<code>.cover-reveal-sticky-image-wrapper</code>), которая будет анимированно исчезать. Опционально можно добавить контент после блока анимации (<code>.cover-reveal-content-after</code>).</p>
-                    <div class="code-block">
-                        <pre><code class="language-html">&lt;div class="cover-reveal-demo-area"&gt;
-  &lt;div class="cover-reveal-content-behind"&gt;
-    &lt;h2&gt;Скрытый Контент&lt;/h2&gt;
-    &lt;p&gt;Этот текст становится видимым после анимации обложки.&lt;/p&gt;
-  &lt;/div&gt;
-  &lt;div class="cover-reveal-sticky-image-wrapper"&gt;
-    &lt;img src="./src/img/parallax/1.jpg" alt="Cover Image" class="cover-reveal-image"&gt;
-  &lt;/div&gt;
-&lt;/div&gt;
-&lt;div class="cover-reveal-content-after"&gt;
-  &lt;h3&gt;Контент после эффекта&lt;/h3&gt;
-  &lt;p&gt;Этот блок появляется ниже области анимации.&lt;/p&gt;
-&lt;/div&gt;</code></pre>
-                    </div>
-                </div>
-
-                <div class="docs-block">
-                    <h3>CSS Реализация</h3>
-                    <p class="paragraf">Ключевые моменты CSS:</p>
-                    <ul class="ul">
-                        <li class="li"><code>.cover-reveal-demo-area</code>: Устанавливает <code>position: relative</code>, высоту (например, <code>200vh</code> для достаточного скролла) и определяет <code>view-timeline-name: --cover-reveal-timeline</code>.</li>
-                        <li class="li"><code>.cover-reveal-content-behind</code>: Абсолютно позиционируется, занимает <code>100vh</code> и имеет <code>z-index: 1</code>.</li>
-                        <li class="li"><code>.cover-reveal-sticky-image-wrapper</code>: Имеет <code>position: sticky</code>, <code>top: 0</code>, высоту <code>100vh</code> и <code>z-index: 2</code> (чтобы быть поверх скрытого контента).</li>
-                        <li class="li"><code>.cover-reveal-image</code>: К этому изображению применяется анимация <code>cover-animate</code>, привязанная к <code>--cover-reveal-timeline</code>. <code>animation-range</code> определяет, когда анимация проигрывается (например, <code>entry 0% entry 50%</code> означает, что анимация длится, пока родительский <code>.cover-reveal-demo-area</code> прокручивается от 0% до 50% своей высоты в области видимости).</li>
-                        <li class="li"><code>@keyframes cover-animate</code>: Определяет, как изображение трансформируется (например, уменьшается, сдвигается вверх и становится прозрачным).</li>
-                    </ul>
-                    <div class="code-block">
-                        <pre><code class="language-css">/* src/styles/allStyle/cover-reveal.css */
-.cover-reveal-demo-area {
-  position: relative; /* Context for sticky, absolute positioning, and view-timeline */
-  height: 200vh;      /* Overall height for the demo section, allows 100vh for effect + 100vh scroll past */
-  view-timeline-name: --cover-reveal-timeline;
-  view-timeline-axis: block;
-  background-color: var(--bg-primary); /* So it has a background if content below is shorter */
-  overflow: hidden; /* To contain elements if needed */
-}
-
-.cover-reveal-content-behind {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100vh; /* Covers the initial viewport height */
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  background-color: var(--bg-elevated); /* Background for the content revealed */
-  color: var(--text-primary);
-  text-align: center;
-  padding: 2rem;
-  z-index: 1; /* Behind the sticky image */
-  box-sizing: border-box;
-}
-
-.cover-reveal-content-behind h2 {
-  font-size: 2.5rem;
-  color: var(--accent-primary);
-  margin-bottom: 1rem;
-}
-
-.cover-reveal-content-behind p {
-  font-size: 1.2rem;
-  line-height: 1.6;
-  max-width: 600px;
-}
-
-.cover-reveal-sticky-image-wrapper {
-  height: 100vh; /* Takes full viewport height */
-  width: 100%;
-  position: sticky;
-  top: 0; /* Sticks to the top of the viewport */
-  z-index: 2; /* Above the content-behind */
-  overflow: hidden; /* Important if image scales down, to not show content from behind prematurely at edges */
-}
-
-.cover-reveal-image {
-  width: 100%;
-  height: 100%;
-  object-fit: cover; /* Cover the wrapper */
-  animation: cover-animate linear forwards; /* Use 'forwards' to keep the final state */
-  animation-timeline: --cover-reveal-timeline;
-  /*
-    The animation completes when the parent '.cover-reveal-demo-area'
-    has scrolled 50% of its height into view. Since the demo-area is 200vh,
-    this means the animation plays out over the first 100vh of scrolling it.
-  */
-  animation-range: entry 0% entry 50%;
-}
-
-@keyframes cover-animate {
-  0% {
-    opacity: 1;
-    transform: scale(1) translateY(0%);
-    /* clip-path: inset(0% 0% 0% 0%); */ /* Alternative: animate clip-path */
-  }
-  100% {
-    opacity: 0;
-    transform: scale(0.85) translateY(-10%); /* Shrink, move up slightly, and fade out */
-    /* clip-path: inset(50% 50% 50% 50%); */ /* Example if using clip-path */
-    visibility: hidden; /* Ensure it's gone and not interactable */
-  }
-}
-
-.cover-reveal-content-after {
-  position: relative; /* Needs to be relative to appear after absolute/sticky elements */
-  padding: 3rem 2rem;
-  text-align: center;
-  background-color: var(--bg-tertiary);
-  min-height: 50vh; /* Just for demo purposes to have content after */
-  z-index: 0; /* Ensure it's below any sticky elements if they were to overlap */
-  color: var(--text-secondary);
-}
-
-.cover-reveal-content-after h3 {
-  font-size: 2rem;
-  margin-bottom: 1rem;
-  color: var(--text-primary);
-}
-</code></pre>
-                    </div>
-                </div>
-
-                <div class="docs-block">
-                    <h3>Демонстрация</h3>
-                    <p class="paragraf">Прокрутите вниз, чтобы увидеть, как изображение плавно исчезает, открывая контент под ним.</p>
-                    <div class="example-container" style="padding:0; margin: 0; max-width: none;">
-                        <div class="cover-reveal-demo-area">
-                            <div class="cover-reveal-content-behind">
-                                <h2>Скрытый Контент Здесь!</h2>
-                                <p>Этот текст был скрыт под изображением. Эффект "cover reveal" позволяет плавно его показать при прокрутке страницы. Можно использовать для интро-секций или для акцентирования внимания на определенном контенте.</p>
-                            </div>
-                            <div class="cover-reveal-sticky-image-wrapper">
-                                <img src="./src/img/parallax/2.jpg" alt="Cover Image Example" class="cover-reveal-image">
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </section>
-
         <section id="cascading-text" class="content-section recipe-example-section">
             <div class="section-header">
                 <h2>Каскадное появление строк текста</h2>
@@ -1107,6 +956,140 @@ img {
                                 <p class="cascading-text-line" style="margin-top: 2em; font-size: clamp(1.2rem, 3vw, 2rem); opacity:0; transform: translateY(50px);">И еще немного текста для демонстрации,</p>
                                 <p class="cascading-text-line" style="font-size: clamp(1.2rem, 3vw, 2rem); opacity:0; transform: translateY(50px);">Чтобы эффект был нагляднее.</p>
                                 <p class="cascading-text-line" style="font-size: clamp(1.2rem, 3vw, 2rem); opacity:0; transform: translateY(50px);">Каждая строка ждет своего часа.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="scaling-images" class="content-section recipe-example-section">
+            <div class="section-header">
+                <h2>Масштабирование изображений при скролле</h2>
+                <p>Эффект плавного появления и масштабирования фонового изображения элемента при прокрутке.</p>
+            </div>
+            <div class="section-body">
+                <div class="docs-block">
+                    <h3>Описание эффекта</h3>
+                    <p class="paragraf">Этот эффект сочетает анимацию появления (opacity и transform) с анимацией масштабирования фонового изображения. Когда элемент входит в область видимости, он плавно появляется, и одновременно его фоновое изображение увеличивается от большего размера к своему естественному, создавая эффект "приближения" или "фокусировки".</p>
+                    <p class="paragraf">Используется <code>animation-timeline: view()</code>, чтобы привязать анимации к моменту попадания элемента в область видимости. <code>animation-range</code> позволяет точно настроить, на каком этапе видимости элемента должны проигрываться анимации.</p>
+                </div>
+
+                <div class="docs-block">
+                    <h3>HTML Структура</h3>
+                    <p class="paragraf">Для каждого элемента с эффектом масштабирования используется обертка (<code>.wrapper</code>), которая будет содержать внутренний блок (<code>.root</code>). Внутренний блок отвечает за отображение фонового изображения и анимацию его масштабирования, а также за анимацию общего появления.</p>
+                    <div class="code-block">
+                        <pre><code class="language-html">&lt;!-- Элемент для демонстрации эффекта --&gt;
+&lt;div class="wrapper" style="background-image: url('./src/img/reveal/1.jpg');"&gt;
+  &lt;div class="root"&gt;
+    &lt;!-- Сюда можно поместить дополнительный контент, если необходимо --&gt;
+  &lt;/div&gt;
+&lt;/div&gt;
+
+&lt;!-- Еще один элемент --&gt;
+&lt;div class="wrapper" style="background-image: url('./src/img/parallax/1.jpg');"&gt;
+  &lt;div class="root"&gt;
+  &lt;/div&gt;
+&lt;/div&gt;</code></pre>
+                    </div>
+                    <p class="paragraf">Обратите внимание, что URL фонового изображения задается через инлайн-стиль для удобства в примере. В реальном проекте это можно делать через CSS классы или JavaScript.</p>
+                </div>
+
+                <div class="docs-block">
+                    <h3>CSS Реализация</h3>
+                    <p class="paragraf">Ключевые моменты в CSS (из файла <code>src/styles/allStyle/scaling-images.css</code>):</p>
+                    <ul class="ul">
+                        <li class="li"><code>.wrapper</code>: Определяет размеры, соотношение сторон и является контейнером, к которому привязана анимация масштабирования фона (<code>scale-bg</code>). Использует <code>overflow: hidden;</code> чтобы обрезать фон, выходящий за пределы при масштабировании.</li>
+                        <li class="li"><code>.root</code>: К этому элементу применяется анимация появления (<code>reveal</code>). Он занимает все пространство родителя.</li>
+                        <li class="li"><code>@keyframes reveal</code>: Анимирует <code>opacity</code> и <code>transform: translateY/scale</code> для плавного появления содержимого.</li>
+                        <li class="li"><code>@keyframes scale-bg</code>: Анимирует <code>background-size</code> для эффекта масштабирования фонового изображения на <code>.wrapper</code>.</li>
+                        <li class="li"><code>animation-timeline: view()</code> и <code>animation-range</code>: Используются для обеих анимаций, чтобы они срабатывали синхронно с прокруткой и видимостью элемента.</li>
+                    </ul>
+                    <div class="code-block">
+                        <pre><code class="language-css">/* CSS из файла src/styles/allStyle/scaling-images.css */
+.wrapper {
+  width: 46vw; 
+  aspect-ratio: 628/866; 
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: 120%; /* Начальный размер фона */
+  animation: scale-bg linear both; 
+  animation-timeline: view(); 
+  animation-range: cover 0% cover 100%; 
+  margin: 0 auto 3rem auto; 
+  overflow: hidden; 
+  border-radius: 10px; 
+  box-shadow: var(--shadow-elevation);
+}
+
+.root {
+  height: 100%;
+  width: 100%;
+  animation: reveal linear both;
+  animation-timeline: view();
+  animation-range: entry 0% cover 30%; 
+  position: relative; 
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+}
+
+@keyframes reveal {
+  from {
+    opacity: 0;
+    transform: translateY(30px) scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes scale-bg {
+  from {
+    background-size: 120%;
+  }
+  to {
+    background-size: 100%;
+  }
+}
+
+/* Медиа-запрос для адаптивности */
+@media (max-width: 767px) {
+  .wrapper {
+    width: 85vw; 
+  }
+}
+
+/* Стиль для .wrapper h4 был удален, так как h4 убраны из демо */
+</code></pre>
+                    </div>
+                     <p class="paragraf">Классы <code>.scaling-image-animated-content</code> и <code>.scaling-image-viewport</code> из предыдущего примера в HTML были заменены на <code>.root</code> и <code>.wrapper</code> соответственно, чтобы соответствовать именам классов в файле <code>scaling-images.css</code>.</p>
+                </div>
+
+                <div class="docs-block">
+                    <h3>Демонстрация</h3>
+                    <p class="paragraf">Прокрутите вниз, чтобы увидеть, как изображения плавно появляются и их фон масштабируется.</p>
+                    <div class="example-container" style="display: flex; flex-direction: column; align-items: center; gap: 3rem;">
+                        <div class="img-wrapper" style="background-image: url('./src/img/reveal/1.jpg');">
+                            <div class="root">
+                                <!-- Removed H4 -->
+                            </div>
+                        </div>
+                        <div class="img-wrapper" style="background-image: url('./src/img/parallax/1.jpg');">
+                            <div class="root">
+                                <!-- Removed H4 -->
+                            </div>
+                        </div>
+                        <div class="img-wrapper" style="background-image: url('./src/img/reveal/2.jpg');">
+                            <div class="root">
+                                <!-- Removed H4 -->
+                            </div>
+                        </div>
+                         <div class="img-wrapper" style="background-image: url('./src/img/parallax/2.jpg');">
+                            <div class="root">
+                                <!-- Removed H4 -->
                             </div>
                         </div>
                     </div>
