@@ -171,6 +171,14 @@ img {
                         <li class="li"><a href="https://developer.chrome.com/docs/css-ui/scroll-driven-animations" target="_blank" rel="noopener noreferrer">Chrome Developers</a> - Основная документация с теорией того, как все работает и примерами. Эта документация на английском.Нет особенностей работы с polyfill и NextJS.</li>
                     </ul>
                 </div>
+
+                <div class="docs-block">
+                    <h3>Важность <code>overflow</code> и динамическое управление</h3>
+                    <p class="paragraf">При работе с Scroll-Driven Animations крайне важно обращать внимание на свойство <code>overflow</code> у родительских элементов. Если у родителя установлено значение <code>hidden</code>, <code>auto</code> или <code>scroll</code>, это может создать новый контекст форматирования и новый "scrollport" (область прокрутки), отличный от ожидаемого (например, viewport документа). Это, в свою очередь, может помешать корректной работе <code>animation-timeline: view()</code>, так как элемент может не считаться "видимым" относительно той области прокрутки, к которой привязана его анимация.</p>
+                    <p class="paragraf"><strong>Симптомы проблемы:</strong> Анимация не запускается, когда элемент появляется на экране, или ведет себя непредсказуемо. Часто это происходит потому, что родительский контейнер с "обрезающим" <code>overflow</code> не позволяет правильно рассчитать пересечение элемента с областью видимости, которую отслеживает <code>view()</code>.</p>
+                    <p class="paragraf">В данном проекте вы можете заметить, что для некоторых демонстрационных вкладок (например, "Горизонтальный скролл", "Параллакс", "SVG анимация") основному контейнеру содержимого (<code>.content-wrapper</code>) с помощью JavaScript динамически устанавливается <code>overflow: auto</code>. Это необходимо для корректной работы их собственных механизмов прокрутки. Для других вкладок, где анимации напрямую зависят от видимости в главном окне прокрутки страницы (например, "Масштабирование изображений"), этому же контейнеру устанавливается <code>overflow: visible</code>, чтобы избежать конфликтов и обеспечить правильное срабатывание <code>view()</code> таймлайнов.</p>
+                    <p class="paragraf">Будьте внимательны и при отладке всегда проверяйте значения <code>overflow</code> у всех родительских элементов анимируемого компонента, если сталкиваетесь с проблемами в работе Scroll-Driven Animations.</p>
+                </div>
             </div>
         </section>
 
@@ -966,130 +974,88 @@ img {
         <section id="scaling-images" class="content-section recipe-example-section">
             <div class="section-header">
                 <h2>Масштабирование изображений при скролле</h2>
-                <p>Эффект плавного появления и масштабирования фонового изображения элемента при прокрутке.</p>
+                <p>Эффект масштабирования фонового изображения элемента при его прокрутке в области видимости.</p>
             </div>
             <div class="section-body">
                 <div class="docs-block">
                     <h3>Описание эффекта</h3>
-                    <p class="paragraf">Этот эффект сочетает анимацию появления (opacity и transform) с анимацией масштабирования фонового изображения. Когда элемент входит в область видимости, он плавно появляется, и одновременно его фоновое изображение увеличивается от большего размера к своему естественному, создавая эффект "приближения" или "фокусировки".</p>
-                    <p class="paragraf">Используется <code>animation-timeline: view()</code>, чтобы привязать анимации к моменту попадания элемента в область видимости. <code>animation-range</code> позволяет точно настроить, на каком этапе видимости элемента должны проигрываться анимации.</p>
+                    <p class="paragraf">Этот эффект демонстрирует, как можно анимировать масштабирование фонового изображения элемента (<code>.img-wrapper</code>) по мере его прохождения через область видимости. Внутренний элемент (<code>.root</code>) используется для задания пропорций.</p>
+                    <p class="paragraf">Анимация <code>scale-up</code> применяется к <code>.img-wrapper</code> и привязана к его вертикальной видимости в области просмотра (<code>animation-timeline: view(block)</code>). По мере прокрутки фон изображения будет увеличиваться с <code>100%</code> до <code>120%</code>.</p>
                 </div>
 
                 <div class="docs-block">
                     <h3>HTML Структура</h3>
-                    <p class="paragraf">Для каждого элемента с эффектом масштабирования используется обертка (<code>.wrapper</code>), которая будет содержать внутренний блок (<code>.root</code>). Внутренний блок отвечает за отображение фонового изображения и анимацию его масштабирования, а также за анимацию общего появления.</p>
+                    <p class="paragraf">Структура состоит из внешнего контейнера <code>.img-wrapper</code>, к которому применяется анимация масштабирования фона, и внутреннего <code>.root</code> для поддержания соотношения сторон.</p>
                     <div class="code-block">
                         <pre><code class="language-html">&lt;!-- Элемент для демонстрации эффекта --&gt;
-&lt;div class="wrapper" style="background-image: url('./src/img/reveal/1.jpg');"&gt;
-  &lt;div class="root"&gt;
-    &lt;!-- Сюда можно поместить дополнительный контент, если необходимо --&gt;
-  &lt;/div&gt;
+&lt;div class="img-wrapper" style="background-image: url('./src/img/reveal/1.jpg');"&gt;
+  &lt;div class="root"&gt;&lt;/div&gt;
 &lt;/div&gt;
 
 &lt;!-- Еще один элемент --&gt;
-&lt;div class="wrapper" style="background-image: url('./src/img/parallax/1.jpg');"&gt;
-  &lt;div class="root"&gt;
-  &lt;/div&gt;
+&lt;div class="img-wrapper" style="background-image: url('./src/img/parallax/1.jpg');"&gt;
+  &lt;div class="root"&gt;&lt;/div&gt;
 &lt;/div&gt;</code></pre>
                     </div>
-                    <p class="paragraf">Обратите внимание, что URL фонового изображения задается через инлайн-стиль для удобства в примере. В реальном проекте это можно делать через CSS классы или JavaScript.</p>
                 </div>
 
                 <div class="docs-block">
                     <h3>CSS Реализация</h3>
                     <p class="paragraf">Ключевые моменты в CSS (из файла <code>src/styles/allStyle/scaling-images.css</code>):</p>
                     <ul class="ul">
-                        <li class="li"><code>.wrapper</code>: Определяет размеры, соотношение сторон и является контейнером, к которому привязана анимация масштабирования фона (<code>scale-bg</code>). Использует <code>overflow: hidden;</code> чтобы обрезать фон, выходящий за пределы при масштабировании.</li>
-                        <li class="li"><code>.root</code>: К этому элементу применяется анимация появления (<code>reveal</code>). Он занимает все пространство родителя.</li>
-                        <li class="li"><code>@keyframes reveal</code>: Анимирует <code>opacity</code> и <code>transform: translateY/scale</code> для плавного появления содержимого.</li>
-                        <li class="li"><code>@keyframes scale-bg</code>: Анимирует <code>background-size</code> для эффекта масштабирования фонового изображения на <code>.wrapper</code>.</li>
-                        <li class="li"><code>animation-timeline: view()</code> и <code>animation-range</code>: Используются для обеих анимаций, чтобы они срабатывали синхронно с прокруткой и видимостью элемента.</li>
+                        <li class="li"><code>.img-wrapper</code>: Устанавливает начальные стили для фона и применяет анимацию <code>scale-up</code>. <code>animation-timeline: view(block)</code> привязывает анимацию к вертикальной прокрутке элемента в области видимости.</li>
+                        <li class="li"><code>.root</code>: Задает <code>aspect-ratio: 2/1</code> для определения пропорций контейнера.</li>
+                        <li class="li"><code>@keyframes scale-up</code>: Анимирует <code>background-size</code> от <code>100%</code> до <code>120%</code>.</li>
                     </ul>
                     <div class="code-block">
-                        <pre><code class="language-css">/* CSS из файла src/styles/allStyle/scaling-images.css */
-.wrapper {
-  width: 46vw; 
-  aspect-ratio: 628/866; 
-  background-position: center;
-  background-repeat: no-repeat;
-  background-size: 120%; /* Начальный размер фона */
-  animation: scale-bg linear both; 
-  animation-timeline: view(); 
-  animation-range: cover 0% cover 100%; 
-  margin: 0 auto 3rem auto; 
-  overflow: hidden; 
-  border-radius: 10px; 
-  box-shadow: var(--shadow-elevation);
+                        <pre><code class="language-css">/* Код из src/styles/allStyle/scaling-images.css */
+.img-wrapper {
+    width: 46vw;
+    display: flex;
+    flex-direction: column;
+    background-position: center;
+    background-repeat: no-repeat;
+    animation: scale-up linear both;
+    animation-timeline: view(block);
+    animation-range: cover 0% cover 100%;
 }
 
 .root {
-  height: 100%;
-  width: 100%;
-  animation: reveal linear both;
-  animation-timeline: view();
-  animation-range: entry 0% cover 30%; 
-  position: relative; 
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-direction: column;
+    position: relative;
+    aspect-ratio: 2/1;
 }
-
-@keyframes reveal {
-  from {
-    opacity: 0;
-    transform: translateY(30px) scale(0.95);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0) scale(1);
-  }
+  
+@keyframes scale-up {
+    from {
+      background-size: 100%;
+    }
+    to {
+      background-size: 120%;
+    }
 }
-
-@keyframes scale-bg {
-  from {
-    background-size: 120%;
-  }
-  to {
-    background-size: 100%;
-  }
-}
-
-/* Медиа-запрос для адаптивности */
-@media (max-width: 767px) {
-  .wrapper {
-    width: 85vw; 
-  }
-}
-
-/* Стиль для .wrapper h4 был удален, так как h4 убраны из демо */
 </code></pre>
                     </div>
-                     <p class="paragraf">Классы <code>.scaling-image-animated-content</code> и <code>.scaling-image-viewport</code> из предыдущего примера в HTML были заменены на <code>.root</code> и <code>.wrapper</code> соответственно, чтобы соответствовать именам классов в файле <code>scaling-images.css</code>.</p>
+                     <p class="paragraf">Ранее используемый класс <code>.wrapper</code> был переименован в <code>.img-wrapper</code>. Анимация <code>reveal</code> для элемента <code>.root</code> была удалена в текущей версии.</p>
                 </div>
 
                 <div class="docs-block">
                     <h3>Демонстрация</h3>
-                    <p class="paragraf">Прокрутите вниз, чтобы увидеть, как изображения плавно появляются и их фон масштабируется.</p>
-                    <div class="example-container" style="display: flex; flex-direction: column; align-items: center; gap: 3rem;">
+                    <p class="paragraf">Прокрутите вниз, чтобы увидеть, как фон изображений масштабируется.</p>
+                    <div class="example-container" style="display: flex; flex-direction: column; align-items: center; gap: 2rem;">
                         <div class="img-wrapper" style="background-image: url('./src/img/reveal/1.jpg');">
                             <div class="root">
-                                <!-- Removed H4 -->
                             </div>
                         </div>
                         <div class="img-wrapper" style="background-image: url('./src/img/parallax/1.jpg');">
                             <div class="root">
-                                <!-- Removed H4 -->
                             </div>
                         </div>
                         <div class="img-wrapper" style="background-image: url('./src/img/reveal/2.jpg');">
                             <div class="root">
-                                <!-- Removed H4 -->
                             </div>
                         </div>
                          <div class="img-wrapper" style="background-image: url('./src/img/parallax/2.jpg');">
                             <div class="root">
-                                <!-- Removed H4 -->
                             </div>
                         </div>
                     </div>

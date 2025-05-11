@@ -1,22 +1,32 @@
 document.addEventListener('DOMContentLoaded', () => {
-    const navLinks = document.querySelectorAll('.sidebar .nav-link'); // First-level tabs
-    const contentSections = document.querySelectorAll('main > .content-section'); // All direct child sections of main
+    const navLinks = document.querySelectorAll('.sidebar .nav-link');
+    const contentSections = document.querySelectorAll('main > .content-section');
     
     const mobileMenuToggle = document.querySelector('.mobile-menu-toggle');
     const sidebar = document.querySelector('.sidebar');
     const pageTitle = document.querySelector('.header h1');
     const progressBar = document.querySelector('.page-progress-bar');
+    const contentWrapper = document.querySelector('.content-wrapper');
 
     const recipesContainer = document.getElementById('recipes-container');
-    const recipeNavLinks = document.querySelectorAll('.recipe-nav-link'); // Second-level tabs
-    const recipeExampleSections = document.querySelectorAll('.recipe-example-section'); // Specific recipe example sections
+    const recipeNavLinks = document.querySelectorAll('.recipe-nav-link');
+    const recipeExampleSections = document.querySelectorAll('.recipe-example-section');
+
+    const sectionsRequiringOverflowAuto = ['horizontal-scroll', 'parallax', 'svg-animation'];
+
+    function updateContentWrapperOverflow(activeSectionId) {
+        if (!contentWrapper) return;
+        if (sectionsRequiringOverflowAuto.includes(activeSectionId)) {
+            contentWrapper.style.overflow = 'auto';
+        } else {
+            contentWrapper.style.overflow = 'visible';
+        }
+    }
 
     function setActiveTab(sectionId) {
-        // Deactivate all top-level sections and links
         navLinks.forEach(item => item.classList.remove('active'));
         contentSections.forEach(item => item.classList.remove('active'));
 
-        // Deactivate all recipe example sections and links (if any were active)
         recipeNavLinks.forEach(item => item.classList.remove('active'));
         recipeExampleSections.forEach(item => item.classList.remove('active'));
 
@@ -27,6 +37,8 @@ document.addEventListener('DOMContentLoaded', () => {
         const targetTopLevelLink = document.querySelector(`.sidebar .nav-link[href="#${sectionId}"]`);
         const targetTopLevelSection = document.getElementById(sectionId);
 
+        let finalActiveSectionId = sectionId;
+
         if (targetTopLevelLink && targetTopLevelSection) {
             targetTopLevelLink.classList.add('active');
             targetTopLevelSection.classList.add('active');
@@ -34,7 +46,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 pageTitle.textContent = targetTopLevelLink.getAttribute('data-title') || 'Scroll-Animations';
             }
 
-            // If the activated top-level section is the recipes container, activate its first sub-tab
             if (sectionId === 'recipes-container' && recipeNavLinks.length > 0) {
                 const firstRecipeLink = recipeNavLinks[0];
                 const firstRecipeSectionId = firstRecipeLink.getAttribute('href').substring(1);
@@ -43,27 +54,27 @@ document.addEventListener('DOMContentLoaded', () => {
                 if (firstRecipeSection) {
                     firstRecipeSection.classList.add('active');
                 }
-                if (pageTitle) { // Update title to the specific recipe
+                if (pageTitle) {
                     pageTitle.textContent = firstRecipeLink.getAttribute('data-title') || pageTitle.textContent;
                 }
+                finalActiveSectionId = firstRecipeSectionId;
                 if (progressBar && firstRecipeSectionId === 'progress-bar') {
                     progressBar.classList.add('progress-bar-active-on-tab');
                 }
             } else {
-                 if (progressBar && sectionId === 'progress-bar') { // For top-level progress bar tab
+                 if (progressBar && sectionId === 'progress-bar') {
                     progressBar.classList.add('progress-bar-active-on-tab');
                 }
             }
         }
+        updateContentWrapperOverflow(finalActiveSectionId);
     }
 
-    // Initial setup: Activate the first top-level tab
     if (navLinks.length > 0) {
         const initialSectionId = navLinks[0].getAttribute('href').substring(1);
         setActiveTab(initialSectionId);
     }
 
-    // Event listener for first-level navigation links
     navLinks.forEach(link => {
         link.addEventListener('click', (e) => {
             e.preventDefault();
@@ -76,13 +87,11 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 
-    // Event listener for second-level (recipe) navigation links
     recipeNavLinks.forEach(recipeLink => {
         recipeLink.addEventListener('click', (e) => {
             e.preventDefault();
             const recipeSectionId = recipeLink.getAttribute('href').substring(1);
 
-            // Deactivate all other recipe example sections and links
             recipeNavLinks.forEach(item => item.classList.remove('active'));
             recipeExampleSections.forEach(item => item.classList.remove('active'));
             
@@ -104,17 +113,16 @@ document.addEventListener('DOMContentLoaded', () => {
                 progressBar.classList.add('progress-bar-active-on-tab');
             }
 
-            // Ensure the main #recipes-container remains active if it's not already
             if (recipesContainer && !recipesContainer.classList.contains('active')) {
-                contentSections.forEach(s => s.classList.remove('active')); // Deactivate other top-level sections
+                contentSections.forEach(s => s.classList.remove('active'));
                 recipesContainer.classList.add('active');
             }
-            // Ensure the top-level "Рецепты" nav link is also active
             const recipesTopLevelLink = document.querySelector('.sidebar .nav-link[href="#recipes-container"]');
             if (recipesTopLevelLink && !recipesTopLevelLink.classList.contains('active')){
                 navLinks.forEach(item => item.classList.remove('active'));
                 recipesTopLevelLink.classList.add('active');
             }
+            updateContentWrapperOverflow(recipeSectionId);
         });
     });
     
