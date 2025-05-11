@@ -16,6 +16,8 @@
     <link rel="stylesheet" href="/src/styles/allStyle/super-scroll.css">
     <link rel="stylesheet" href="/src/styles/allStyle/progress-bar.css">
     <link rel="stylesheet" href="/src/styles/allStyle/card-stack.css">
+    <link rel="stylesheet" href="/src/styles/allStyle/cover-reveal.css">
+    <link rel="stylesheet" href="/src/styles/allStyle/cascading-text-reveal.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 <body>
@@ -189,16 +191,12 @@ img {
                         <li><a href="#svg-animation" class="recipe-nav-link" data-title="SVG Анимация">SVG Анимация</a></li>
                         <li><a href="#progress-bar" class="recipe-nav-link" data-title="Индикатор прогресса">Индикатор прогресса</a></li>
                         <li><a href="#card-stack" class="recipe-nav-link" data-title="Карточки (Card Stack)">Стопка Карточек</a></li>
+                        <li><a href="#cover-reveal" class="recipe-nav-link" data-title="Появление контента из изображения">Появление контента из изображения</a></li>
+                        <li><a href="#cascading-text" class="recipe-nav-link" data-title="Каскадное появление текста">Каскадное появление текста</a></li>
                     </ul>
                 </nav>
-
-                <!-- Existing example sections will be controlled by JS to appear here -->
-                <!-- For simplicity, they remain at the top level in HTML but are managed by JS -->
             </div>
         </section>
-        <!-- END Recipes Container -->
-
-        <!-- Section 1: Horizontal Scroll -->
         <section id="horizontal-scroll" class="content-section recipe-example-section">
             <div class="section-header">
                 <h2>Горизонтальный скролл при вертикальной прокрутке</h2>
@@ -858,6 +856,257 @@ img {
                             <div class="card-stack-card card-4">
                                 <h4>Карточка 4</h4>
                                 <p>Последняя карточка завершает эффект. Прокрутите дальше, чтобы увидеть, как они остаются "налипшими".</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="cover-reveal" class="content-section recipe-example-section">
+            <div class="section-header">
+                <h2>Cover Reveal Эффект</h2>
+                <p>Эффект, при котором одно изображение или секция плавно "уходит", открывая контент под ней.</p>
+            </div>
+            <div class="section-body">
+                <div class="docs-block">
+                    <h3>HTML Структура</h3>
+                    <p class="paragraf">Для этого эффекта нам понадобится контейнер-обертка (<code>.cover-reveal-demo-area</code>), который будет определять общую высоту для анимации и служить якорем для <code>view-timeline</code>. Внутри него размещаются два основных блока: контент, который будет скрыт изначально (<code>.cover-reveal-content-behind</code>), и "обложка" (<code>.cover-reveal-sticky-image-wrapper</code>), которая будет анимированно исчезать. Опционально можно добавить контент после блока анимации (<code>.cover-reveal-content-after</code>).</p>
+                    <div class="code-block">
+                        <pre><code class="language-html">&lt;div class="cover-reveal-demo-area"&gt;
+  &lt;div class="cover-reveal-content-behind"&gt;
+    &lt;h2&gt;Скрытый Контент&lt;/h2&gt;
+    &lt;p&gt;Этот текст становится видимым после анимации обложки.&lt;/p&gt;
+  &lt;/div&gt;
+  &lt;div class="cover-reveal-sticky-image-wrapper"&gt;
+    &lt;img src="./src/img/parallax/1.jpg" alt="Cover Image" class="cover-reveal-image"&gt;
+  &lt;/div&gt;
+&lt;/div&gt;
+&lt;div class="cover-reveal-content-after"&gt;
+  &lt;h3&gt;Контент после эффекта&lt;/h3&gt;
+  &lt;p&gt;Этот блок появляется ниже области анимации.&lt;/p&gt;
+&lt;/div&gt;</code></pre>
+                    </div>
+                </div>
+
+                <div class="docs-block">
+                    <h3>CSS Реализация</h3>
+                    <p class="paragraf">Ключевые моменты CSS:</p>
+                    <ul class="ul">
+                        <li class="li"><code>.cover-reveal-demo-area</code>: Устанавливает <code>position: relative</code>, высоту (например, <code>200vh</code> для достаточного скролла) и определяет <code>view-timeline-name: --cover-reveal-timeline</code>.</li>
+                        <li class="li"><code>.cover-reveal-content-behind</code>: Абсолютно позиционируется, занимает <code>100vh</code> и имеет <code>z-index: 1</code>.</li>
+                        <li class="li"><code>.cover-reveal-sticky-image-wrapper</code>: Имеет <code>position: sticky</code>, <code>top: 0</code>, высоту <code>100vh</code> и <code>z-index: 2</code> (чтобы быть поверх скрытого контента).</li>
+                        <li class="li"><code>.cover-reveal-image</code>: К этому изображению применяется анимация <code>cover-animate</code>, привязанная к <code>--cover-reveal-timeline</code>. <code>animation-range</code> определяет, когда анимация проигрывается (например, <code>entry 0% entry 50%</code> означает, что анимация длится, пока родительский <code>.cover-reveal-demo-area</code> прокручивается от 0% до 50% своей высоты в области видимости).</li>
+                        <li class="li"><code>@keyframes cover-animate</code>: Определяет, как изображение трансформируется (например, уменьшается, сдвигается вверх и становится прозрачным).</li>
+                    </ul>
+                    <div class="code-block">
+                        <pre><code class="language-css">/* src/styles/allStyle/cover-reveal.css */
+.cover-reveal-demo-area {
+  position: relative; /* Context for sticky, absolute positioning, and view-timeline */
+  height: 200vh;      /* Overall height for the demo section, allows 100vh for effect + 100vh scroll past */
+  view-timeline-name: --cover-reveal-timeline;
+  view-timeline-axis: block;
+  background-color: var(--bg-primary); /* So it has a background if content below is shorter */
+  overflow: hidden; /* To contain elements if needed */
+}
+
+.cover-reveal-content-behind {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100vh; /* Covers the initial viewport height */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background-color: var(--bg-elevated); /* Background for the content revealed */
+  color: var(--text-primary);
+  text-align: center;
+  padding: 2rem;
+  z-index: 1; /* Behind the sticky image */
+  box-sizing: border-box;
+}
+
+.cover-reveal-content-behind h2 {
+  font-size: 2.5rem;
+  color: var(--accent-primary);
+  margin-bottom: 1rem;
+}
+
+.cover-reveal-content-behind p {
+  font-size: 1.2rem;
+  line-height: 1.6;
+  max-width: 600px;
+}
+
+.cover-reveal-sticky-image-wrapper {
+  height: 100vh; /* Takes full viewport height */
+  width: 100%;
+  position: sticky;
+  top: 0; /* Sticks to the top of the viewport */
+  z-index: 2; /* Above the content-behind */
+  overflow: hidden; /* Important if image scales down, to not show content from behind prematurely at edges */
+}
+
+.cover-reveal-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover; /* Cover the wrapper */
+  animation: cover-animate linear forwards; /* Use 'forwards' to keep the final state */
+  animation-timeline: --cover-reveal-timeline;
+  /*
+    The animation completes when the parent '.cover-reveal-demo-area'
+    has scrolled 50% of its height into view. Since the demo-area is 200vh,
+    this means the animation plays out over the first 100vh of scrolling it.
+  */
+  animation-range: entry 0% entry 50%;
+}
+
+@keyframes cover-animate {
+  0% {
+    opacity: 1;
+    transform: scale(1) translateY(0%);
+    /* clip-path: inset(0% 0% 0% 0%); */ /* Alternative: animate clip-path */
+  }
+  100% {
+    opacity: 0;
+    transform: scale(0.85) translateY(-10%); /* Shrink, move up slightly, and fade out */
+    /* clip-path: inset(50% 50% 50% 50%); */ /* Example if using clip-path */
+    visibility: hidden; /* Ensure it's gone and not interactable */
+  }
+}
+
+.cover-reveal-content-after {
+  position: relative; /* Needs to be relative to appear after absolute/sticky elements */
+  padding: 3rem 2rem;
+  text-align: center;
+  background-color: var(--bg-tertiary);
+  min-height: 50vh; /* Just for demo purposes to have content after */
+  z-index: 0; /* Ensure it's below any sticky elements if they were to overlap */
+  color: var(--text-secondary);
+}
+
+.cover-reveal-content-after h3 {
+  font-size: 2rem;
+  margin-bottom: 1rem;
+  color: var(--text-primary);
+}
+</code></pre>
+                    </div>
+                </div>
+
+                <div class="docs-block">
+                    <h3>Демонстрация</h3>
+                    <p class="paragraf">Прокрутите вниз, чтобы увидеть, как изображение плавно исчезает, открывая контент под ним.</p>
+                    <div class="example-container" style="padding:0; margin: 0; max-width: none;">
+                        <div class="cover-reveal-demo-area">
+                            <div class="cover-reveal-content-behind">
+                                <h2>Скрытый Контент Здесь!</h2>
+                                <p>Этот текст был скрыт под изображением. Эффект "cover reveal" позволяет плавно его показать при прокрутке страницы. Можно использовать для интро-секций или для акцентирования внимания на определенном контенте.</p>
+                            </div>
+                            <div class="cover-reveal-sticky-image-wrapper">
+                                <img src="./src/img/parallax/2.jpg" alt="Cover Image Example" class="cover-reveal-image">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="cascading-text" class="content-section recipe-example-section">
+            <div class="section-header">
+                <h2>Каскадное появление строк текста</h2>
+                <p>Эффект, где строки текста последовательно появляются с анимацией при прокрутке.</p>
+            </div>
+            <div class="section-body">
+                <div class="docs-block">
+                    <h3>Описание эффекта</h3>
+                    <p class="paragraf">Этот эффект создает ощущение каскадного появления строк текста: каждая строка плавно анимируется при попадании в область видимости во время прокрутки. Традиционно для такой динамической анимации текста часто прибегают к JavaScript-библиотекам, но современные CSS Scroll-Driven Animations позволяют реализовать это элегантно и производительно без дополнительного скриптинга.</p>
+                    <p class="paragraf">Каждая строка текста получает собственную временную шкалу просмотра (<code>animation-timeline: view()</code>) и анимируется в определенном диапазоне видимости (<code>animation-range</code>). Это позволяет тексту "оживать" по мере его появления на экране.</p>
+                </div>
+
+                <div class="docs-block">
+                    <h3>HTML Структура</h3>
+                    <p class="paragraf">Структура HTML довольно проста: нужен общий контейнер для области демонстрации (<code>.cascading-text-area</code>), внутри него — контейнер для самих строк текста (<code>.cascading-text-container</code>), и затем каждая строка текста оборачивается в свой элемент (например, <code>&lt;p class="cascading-text-line"&gt;</code>).</p>
+                    <div class="code-block">
+                        <pre><code class="language-html">&lt;div class="cascading-text-area"&gt;
+  &lt;div class="cascading-text-container"&gt;
+    &lt;p class="cascading-text-line"&gt;Прокрутка вниз оживляет строки,&lt;/p&gt;
+    &lt;p class="cascading-text-line"&gt;Словно каскад, они всплывают,&lt;/p&gt;
+    &lt;p class="cascading-text-line"&gt;CSS магией своей играют,&lt;/p&gt;
+    &lt;p class="cascading-text-line"&gt;Без JavaScript мир открывают.&lt;/p&gt;
+  &lt;/div&gt;
+&lt;/div&gt;</code></pre>
+                    </div>
+                </div>
+
+                <div class="docs-block">
+                    <h3>CSS Реализация</h3>
+                    <p class="paragraf">Ключевые моменты CSS-реализации:</p>
+                    <ul class="ul">
+                        <li class="li"><code>.cascading-text-line</code>: К этому классу применяется основная анимация. Изначально строки смещены за пределы экрана (<code>transform: translateX(-100px)</code>) и полностью прозрачны (<code>opacity: 0</code>).</li>
+                        <li class="li"><code>animation: cascade-in linear forwards;</code>: Применяет анимацию <code>cascade-in</code>.</li>
+                        <li class="li"><code>animation-timeline: view();</code>: Самое важное — каждая строка получает свою независимую временную шкалу, привязанную к её появлению во вьюпорте.</li>
+                        <li class="li"><code>animation-range: entry 0% contain 50%;</code>: Анимация для каждой строки начинается, как только она начинает появляться в области видимости (<code>entry 0%</code>), и полностью завершается, когда 50% элемента находится в видимой зоне (<code>contain 50%</code>). Это создает эффект последовательного появления при скролле.</li>
+                        <li class="li"><code>@keyframes cascade-in</code>: Определяет плавный переход от начального состояния (за экраном, повернуто) к финальному (на своем месте, без поворота и полностью видимо). Промежуточный шаг на 60% добавляет анимации немного "упругости".</li>
+                    </ul>
+                    <div class="code-block">
+                        <pre><code class="language-css">
+.cascading-text-area {
+  padding: 10vh 2rem;
+  background-color: var(--bg-tertiary);
+  color: var(--text-primary);
+  font-family: 'Georgia', serif;
+}
+
+.cascading-text-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.cascading-text-line {
+  font-size: clamp(1.5rem, 4vw, 3rem);
+  line-height: 1.4;
+  text-align: center;
+  opacity: 0;
+  transform: translateX(-100px) rotate(-5deg);
+  animation: cascade-in linear forwards;
+  animation-timeline: view();
+  animation-range: entry 0% contain 50%;
+}
+
+@keyframes cascade-in {
+  0% {
+    opacity: 0;
+    transform: translateX(-100px) rotate(-5deg);
+  }
+  60% {
+    opacity: 0.8;
+    transform: translateX(10px) rotate(2deg);
+  }
+  100% {
+    opacity: 1;
+    transform: translateX(0) rotate(0deg);
+  }
+}</code></pre>
+                    </div>
+                </div>
+
+                <div class="docs-block">
+                    <h3>Демонстрация</h3>
+                    <p class="paragraf">Прокрутите страницу вниз, чтобы увидеть, как строки текста плавно появляются одна за другой.</p>
+                    <div class="example-container" style="padding:0; margin: 0; max-width: none;">
+                        <div class="cascading-text-area">
+                            <div class="cascading-text-container">
+                                <p class="cascading-text-line">Прокрутка вниз оживляет строки,</p>
+                                <p class="cascading-text-line">Словно каскад, они всплывают,</p>
+                                <p class="cascading-text-line">CSS магией своей играют,</p>
+                                <p class="cascading-text-line">Без JavaScript мир открывают.</p>
+                                <p class="cascading-text-line" style="margin-top: 2em; font-size: clamp(1.2rem, 3vw, 2rem); opacity:0; transform: translateY(50px);">И еще немного текста для демонстрации,</p>
+                                <p class="cascading-text-line" style="font-size: clamp(1.2rem, 3vw, 2rem); opacity:0; transform: translateY(50px);">Чтобы эффект был нагляднее.</p>
+                                <p class="cascading-text-line" style="font-size: clamp(1.2rem, 3vw, 2rem); opacity:0; transform: translateY(50px);">Каждая строка ждет своего часа.</p>
                             </div>
                         </div>
                     </div>
