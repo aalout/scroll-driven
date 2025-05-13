@@ -1,28 +1,26 @@
 .cube-3d-body-wrapper {
   padding: 1rem;
-  /* Define scroll timeline scopes at the level where scrollers and animated elements co-exist */
   timeline-scope: --cubeScrollerX, --cubeScrollerY;
-  /* Ensure this wrapper itself doesn't cause unexpected overflow issues for its children like cube-viewer */
   overflow: visible; 
-  font-family: var(--font-family-sans-serif, 'Afacad', 'Inter', sans-serif); /* Apply theme font */
+  font-family: var(--font-family-sans-serif, 'Afacad', 'Inter', sans-serif);
 }
 
 .cube-controls-container {
   max-width: 1200px;
-  margin: 2rem auto; /* Add some margin for better separation if this is a top-level container in the tab */
+  margin: 2rem auto;
   display: grid;
-  grid-gap: 1.5rem; /* Consistent gap */
-  grid-template-rows: auto auto; /* Rows for scrollers, then viewer */
-  padding-bottom: 1rem; /* Add some space at the bottom of the controls */
+  grid-gap: 1.5rem;
+  grid-template-rows: auto auto;
+  padding-bottom: 1rem;
 }
 
 @media (min-width: 768px) { 
   .cube-controls-container {
-    grid-template-columns: 1fr 1fr; /* Two columns for scrollers */
-    grid-template-rows: auto;    /* Scrollers on one row */
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: auto;
   }
   .cube-viewer {
-    grid-column: 1 / span 2; /* Viewer spans both columns, on the next "implicit" row */
+    grid-column: 1 / span 2;
     margin-top: 1.5rem; 
   }
 }
@@ -30,25 +28,25 @@
 .cube-scroller-card {
   background-color: var(--bg-tertiary); 
   color: var(--text-secondary); 
-  padding: 1rem; /* Consistent padding */
+  padding: 1rem;
   min-height: 7rem; 
   border: 1px solid var(--border-color); 
-  border-radius: 8px; /* Consistent radius */
-  text-transform: none; /* Softer look */
-  overflow: hidden; /* Crucial: will be overridden by axis-specific overflow */
-  scroll-snap-type: both mandatory; /* Snap on the active axis */
+  border-radius: 8px;
+  text-transform: none;
+  overflow: hidden;
+  scroll-snap-type: both mandatory;
   font-size: 0.95em;
   display: flex; 
   align-items: center;
   justify-content: center;
-  box-shadow: var(--shadow-elevation); /* Theme shadow */
+  box-shadow: var(--shadow-elevation);
 }
 
 .cube-scroller-card .scroll-content {
   display: flex;
   flex-wrap: nowrap;
-  height: 100%; /* For vertical scrolling */
-  width: 100%;  /* For horizontal scrolling */
+  height: 100%;
+  width: 100%;
 }
 
 .cube-scroller-card .scroll-content-item {
@@ -56,15 +54,15 @@
    width: 100%;
    height: 100%;
    scroll-snap-align: start;
-   padding: 10px 15px; /* Adjusted padding for better text fit */
+   padding: 10px 15px;
    display: flex;
    align-items: center;
    justify-content: center;
    text-align: center;
    box-sizing: border-box;
-   font-size: 0.9em; /* Slightly smaller for scroller items */
-   line-height: 1.3; /* Improved line height for scroller text */
-   color: var(--text-secondary); /* Ensure theme color */
+   font-size: 0.9em;
+   line-height: 1.3;
+   color: var(--text-secondary);
 }
 
 .scroll-x-container {
@@ -75,7 +73,7 @@
 }
 .scroll-x-container .scroll-content {
   flex-direction: row;
-  width: 400%; /* For 4 items in the demo */
+  width: 400%;
 }
 
 .scroll-y-container {
@@ -83,26 +81,25 @@
   scroll-timeline-name: --cubeScrollerY;
   overflow-y: scroll;
   overflow-x: hidden;
-  /* Ensure consistent height with horizontal scroller */
   height: var(--scroller-height, 7rem); 
 }
 .scroll-y-container .scroll-content {
   flex-direction: column;
-  height: 400%; /* For 4 items in the demo */
+  height: 400%;
 }
 
 .cube-viewer {
-  background-color: var(--bg-secondary); /* Use secondary for consistency with other example blocks */
+  background-color: var(--bg-secondary);
   border: 1px solid var(--border-color); 
-  border-radius: 12px; /* Match .example-container */
-  padding: 1rem;    /* Match .example-container */
-  height: auto;      /* Allow content to define height */
+  border-radius: 12px;
+  padding: 1rem;
+  height: auto;
   min-height: 600px; 
   position: relative;
   z-index: 1; 
   box-shadow: var(--shadow-elevation);
-  overflow: hidden; /* To contain the #tridiv if it tries to overflow viewer */
-  margin-top: 1rem; /* Added margin-top for spacing when stacked on mobile */
+  overflow: hidden;
+  margin-top: 1rem;
 }
 
 @media (max-width: 767px) { 
@@ -112,10 +109,10 @@
     min-height: 350px;
   }
   .cube-controls-container {
-    grid-gap: 1rem; /* Smaller gap on mobile */
+    grid-gap: 1rem;
   }
   .cube-scroller-card {
-    min-height: 6rem; /* Slightly smaller cards on mobile */
+    min-height: 6rem;
   }
 }
 
@@ -124,12 +121,17 @@
   position: absolute;
   top: 0; left: 0; right: 0; bottom: 0;
   width: 100%; height: 100%;
-  font-size: 10px; /* Base size for em units */
+  font-size: 10px;
   overflow: visible;
-  margin: auto; /* Center #tridiv within .cube-viewer if needed */
+  margin: auto;
 }
 
-/* Basic 3D setup */
+@media (max-width: 767px) {
+  #tridiv {
+    font-size: 5px;
+  }
+}
+
 .scene {
   position: absolute;
   width: 100%; 
@@ -143,23 +145,21 @@
              scale(var(--cube-scale, 0.8));
   animation: rotateHorizontalCube linear, rotateVerticalCube linear;
   animation-timeline: --cubeScrollerX, --cubeScrollerY;
-  font-family: var(--font-family-monospace, monospace); /* Monospace for face text for a techy feel */
+  font-family: var(--font-family-monospace, monospace);
   font-weight: bold;
 }
 
-/* Cube shape container */
 .shape.demo-cube {
   position: absolute;
   width: 15em; 
   height: 15em;
   top: 50%; 
   left: 50%;
-  margin-left: -7.5em; /* Half width */
-  margin-top: -7.5em;  /* Half height */
+  margin-left: -7.5em;
+  margin-top: -7.5em;
   transform-style: preserve-3d;
 }
 
-/* Common face styles */
 .demo-cube .face {
   position: absolute;
   width: 15em; 
@@ -167,39 +167,35 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 1.6em; /* Slightly increased size for face text */
+  font-size: 1.6em;
   font-weight: bold;
-  color: var(--text-on-accent-strong, #FFFFFF); /* High contrast text on colored faces */
-  border: 1px solid rgba(255, 255, 255, 0.35); /* Brighter border on faces */
-  text-shadow: 0px 1px 3px rgba(0, 0, 0, 0.7); /* Stronger text shadow */
+  color: var(--text-on-accent-strong, #FFFFFF);
+  border: 1px solid rgba(255, 255, 255, 0.35);
+  text-shadow: 0px 1px 3px rgba(0, 0, 0, 0.7);
   backface-visibility: hidden;
-  box-sizing: border-box; /* Ensure padding/border included in width/height */
-  padding: 0.5em; /* Add some padding to face text */
-  text-align: center; /* Center text on face */
+  box-sizing: border-box;
+  padding: 0.5em;
+  text-align: center;
 }
 
-/* Face colors */
-.demo-cube .ft { background-color: var(--color-red-700-alpha-85, rgba(229, 57, 53, 0.85)); }   /* Red */
-.demo-cube .bk { background-color: var(--color-green-700-alpha-85, rgba(67, 160, 71, 0.85)); }   /* Green */
-.demo-cube .rt { background-color: var(--color-blue-700-alpha-85, rgba(25, 118, 210, 0.85)); }  /* Blue */
-.demo-cube .lt { background-color: var(--color-yellow-600-alpha-85, rgba(253, 216, 53, 0.85)); }  /* Yellow */
-.demo-cube .tp { background-color: var(--color-purple-700-alpha-85, rgba(123, 31, 162, 0.85)); }  /* Purple */
-.demo-cube .bm { background-color: var(--color-orange-500-alpha-85, rgba(255, 138, 101, 0.85)); } /* Orange */
+.demo-cube .ft { background-color: var(--color-red-700-alpha-85, rgba(229, 57, 53, 0.85)); }
+.demo-cube .bk { background-color: var(--color-green-700-alpha-85, rgba(67, 160, 71, 0.85)); }
+.demo-cube .rt { background-color: var(--color-blue-700-alpha-85, rgba(25, 118, 210, 0.85)); }
+.demo-cube .lt { background-color: var(--color-yellow-600-alpha-85, rgba(253, 216, 53, 0.85)); }
+.demo-cube .tp { background-color: var(--color-purple-700-alpha-85, rgba(123, 31, 162, 0.85)); }
+.demo-cube .bm { background-color: var(--color-orange-500-alpha-85, rgba(255, 138, 101, 0.85)); }
 
-/* Face positions - cube size is 15em */
-.demo-cube .ft { transform: translateZ(7.5em); }                   /* Front */
-.demo-cube .bk { transform: rotateY(180deg) translateZ(7.5em); }   /* Back */
-.demo-cube .rt { transform: rotateY(90deg) translateZ(7.5em); }    /* Right */
-.demo-cube .lt { transform: rotateY(-90deg) translateZ(7.5em); }   /* Left */
-.demo-cube .tp { transform: rotateX(90deg) translateZ(7.5em); }    /* Top */
-.demo-cube .bm { transform: rotateX(-90deg) translateZ(7.5em); }   /* Bottom */
+.demo-cube .ft { transform: translateZ(7.5em); }
+.demo-cube .bk { transform: rotateY(180deg) translateZ(7.5em); }
+.demo-cube .rt { transform: rotateY(90deg) translateZ(7.5em); }
+.demo-cube .lt { transform: rotateY(-90deg) translateZ(7.5em); }
+.demo-cube .tp { transform: rotateX(90deg) translateZ(7.5em); }
+.demo-cube .bm { transform: rotateX(-90deg) translateZ(7.5em); }
 
-/* Animation properties */
 @property --cube-x-angle { syntax: "<angle>"; inherits: false; initial-value: -25deg; }
 @property --cube-y-angle { syntax: "<angle>"; inherits: false; initial-value: -25deg; }
 @property --cube-scale { syntax: "<number>"; inherits: false; initial-value: 0.8; }
 
-/* Animations */
 @keyframes rotateHorizontalCube {
   from { --cube-y-angle: -25deg; } 
   to   { --cube-y-angle: calc(-25deg + 360deg); }
@@ -208,4 +204,4 @@
 @keyframes rotateVerticalCube {
   from { --cube-x-angle: -25deg; }
   to   { --cube-x-angle: calc(-25deg + 360deg); }
-} 
+}
