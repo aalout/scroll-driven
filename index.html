@@ -61,16 +61,13 @@
         <h1>Scroll Animations</h1>
     </header>
 
-    <!-- Main Content Area -->
     <main class="content-wrapper">
-        <!-- NEW CONTENT SECTION: General Information -->
         <section id="general-info" class="content-section">
             <div class="section-header">
                 <h2>Обзор технологии Scroll-Driven Animations</h2>
                 <p>Подробное описание, ключевые концепции, области применения, плюсы и минусы.</p>
             </div>
             <div class="section-body">
-                <!-- User's Point 2: Описание технологии -->
                 <div class="docs-block">
                     <h3>Описание технологии</h3>
                     <p class="paragraf">Для управления анимацией связанной со скроллом добавлены две концепции это Scroll Timelines and View Timelines или Временная шкала (<a href="https://drafts.csswg.org/scroll-animations-1/" target="_blank" rel="noopener noreferrer">спецификация W3C</a>) прогресса прокрутки и временная шкала просмотра.</p>
@@ -103,7 +100,7 @@ animation-timeline: scroll(root block);
                     <p class="paragraf">Также мы можем использовать именованную временную шкалу прогресса прокрутки. Что позволит нам привязать ее к любому элементу и выбрать ось. После чего указать в другом элементе для выполнения анимации.</p>
                     <div class="code-block"><pre><code class="language-css">.scroller {
   scroll-timeline-name: --my-scroller;
-  scroll-timeline-axis: inline; /* или короткая запись: scroll-timeline: --my-scroller inline; */
+  scroll-timeline-axis:
 }
 
 .scroller .subject {
@@ -184,14 +181,12 @@ img {
             </div>
         </section>
 
-        <!-- NEW CONTENT SECTION: Recipes Container -->
         <section id="recipes-container" class="content-section">
             <div class="section-header">
                 <h2>Рецепты Scroll-Driven Animations</h2>
                 <p>Коллекция готовых примеров и техник.</p>
             </div>
             <div class="section-body">
-                <!-- Second-level tab navigation will go here -->
                 <nav class="recipes-nav">
                     <ul class="recipes-nav-links">
                         <li><a href="#horizontal-scroll" class="recipe-nav-link" data-title="Горизонтальный скролл">Горизонтальный скролл</a></li>
@@ -234,7 +229,7 @@ img {
 
                 <div class="docs-block">
                     <h3>CSS Анимация</h3>
-                    <p class="paragraf">Ключевые моменты в CSS: создание timeline-view, sticky-позиционирование и анимация transform с опорой на скролл.</p>
+                    <p class="paragraf">Ключевые моменты в CSS: создание именованной временной шкалы просмотра (view-timeline-name), sticky-позиционирование и анимация transform с опорой на скролл. Ширина внутреннего контейнера (<code>.pin-wrap</code>) должна быть достаточной, чтобы вместить всё горизонтально прокручиваемое содержимое (в примере <code>179vmax</code>, но это значение зависит от вашего контента).</p>
                     <div class="code-block">
                         <pre><code class="language-css">@keyframes move {
   to {
@@ -291,7 +286,6 @@ img {
             </div>
         </section>
 
-        <!-- Section 2: Carousel with Markers -->
         <section id="carousel" class="content-section recipe-example-section">
             <div class="section-header">
                 <h2>Карусель с маркерами</h2>
@@ -354,6 +348,13 @@ img {
 /* .markers li:nth-child(1) a { --i: 1; } */
 /* .markers li:nth-child(2) a { --i: 2; } */
 /* ... и так далее для всех маркеров */
+
+/* Необходимые стили для задания переменной --i */
+.markers li:nth-child(1) a { --i: 1; }
+.markers li:nth-child(2) a { --i: 2; }
+.markers li:nth-child(3) a { --i: 3; }
+.markers li:nth-child(4) a { --i: 4; }
+/* Добавьте больше правил, если у вас больше слайдов */
 </code></pre>
                     </div>
                 </div>
@@ -454,30 +455,43 @@ img {
 &lt;/ul&gt;</code></pre>
                     </div>
                     <div class="code-block">
-                        <pre><code class="language-css">/* Базовые стили для изображения внутри слайда */
+                        <pre><code class="language-css">/* Базовые стили для контейнера и слайдов */
+.slides {
+  list-style: none;
+  overflow-x: scroll; /* Важно для view(x) */
+  overflow-y: hidden;
+  white-space: nowrap;
+}
+
+.slide {
+  display: inline-block;
+  width: 600px;
+  height: 99vh;
+  position: relative;
+  overflow: clip;
+}
+
 .slide &gt; img {
   object-fit: cover;
   object-position: 100% 0;
   display: block;
   width: 100%;
   height: 100%;
-  position: absolute
+  position: absolute;
   right: 0;
+  animation: adjust-image linear both; /* 'both' удерживает состояние анимации */
+  animation-timeline: view(x); /* Анимация привязана к горизонтальной прокрутке родительского .slide */
 }
 
 @keyframes adjust-image {
   0% {
-    object-position: 100% 0; /* Изображение смещено вправо */
+    object-position: 100% 0;
   }
   100% {
-    object-position: 0 0;   /* Изображение смещено влево */
+    object-position: 0 0;
   }
 }
-
-.slide &gt; img {
-  animation: adjust-image linear both; /* 'both' удерживает состояние анимации */
-  animation-timeline: view(x); /* Анимация привязана к горизонтальной прокрутке родительского .slide */
-}</code></pre>
+</code></pre>
                     </div>
                 </div>
 
@@ -497,7 +511,6 @@ img {
             </div>
         </section>
 
-        <!-- Section 5: SVG Animation -->
         <section id="svg-animation" class="content-section recipe-example-section">
             <div class="section-header">
                 <h2>SVG Анимация</h2>
@@ -532,11 +545,33 @@ img {
   padding-inline: 2vw;
 }
 
+.super-svg {
+  position: sticky;
+  top: 0;
+  width: 100%;
+  height: 60vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8vw;
+  z-index: 1;
+  pointer-events: none;
+  background: none;
+}
+
 .super-svg-1 {
+  width: 28vw;
+  height: 28vw;
+  min-width: 150px;
+  min-height: 150px;
+  stroke: #3a86ff;
+  stroke-width: 7;
+  fill: none;
+  stroke-linecap: round;
   stroke-dasharray: 251;
   stroke-dashoffset: 251;
   animation: circle-rotate linear forwards;
-  animation-timeline: --super-scroll-tl; /* Привязка к таймлайну */
+  animation-timeline: --super-scroll-tl;
   animation-range: contain 0% contain 100%;
 }
 
@@ -551,11 +586,23 @@ img {
   }
 }
 
+.super-svg-text {
+  width: 60vw;
+  height: 120px;
+}
+
 .super-svg-text text {
-  stroke-dasharray: 900; /* Для эффекта "рисования" текста */
+  stroke: url(#superTextGradient);
+  stroke-width: 3;
+  fill: none;
+  font-size: 64px;
+  font-family: 'Montserrat', Arial, sans-serif;
+  text-anchor: middle;
+  dominant-baseline: middle;
+  stroke-dasharray: 900;
   stroke-dashoffset: 900;
   animation: text-draw linear forwards;
-  animation-timeline: --super-scroll-tl; /* Привязка к таймлайну */
+  animation-timeline: --super-scroll-tl;
   animation-range: contain 0% contain 100%;
 }
 
@@ -566,7 +613,48 @@ img {
   100% {
     stroke-dashoffset: 0;
   }
-}</code></pre>
+}
+
+.super-svg-2 {
+  width: 22vw;
+  height: 22vw;
+  min-width: 120px;
+  min-height: 120px;
+  stroke: #8338ec;
+  stroke-width: 6;
+  fill: none;
+  stroke-linecap: square;
+  stroke-dasharray: 320;
+  stroke-dashoffset: 320;
+  animation: rect-rotate linear forwards;
+  animation-timeline: --super-scroll-tl;
+  animation-range: contain 0% contain 100%;
+}
+
+@keyframes rect-rotate {
+  0% {
+    stroke-dashoffset: 320;
+    transform: rotate(0deg);
+  }
+  100% {
+    stroke-dashoffset: 0;
+    transform: rotate(-360deg);
+  }
+}
+
+/* Не забудьте определить градиент, если используете его для текста */
+/*
+<svg>
+  <defs>
+    <linearGradient id="superTextGradient" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#3a86ff" stop-opacity="0.8"/>
+      <stop offset="60%" stop-color="#8338ec" stop-opacity="0.8"/>
+      <stop offset="100%" stop-color="#fff" stop-opacity="0.7"/>
+    </linearGradient>
+  </defs>
+</svg>
+*/
+</code></pre>
                     </div>
                 </div>
 
@@ -595,7 +683,6 @@ img {
             </div>
         </section>
 
-        <!-- Section: Page Scroll Progress Bar -->
         <section id="progress-bar" class="content-section recipe-example-section">
             <div class="section-header">
                 <h2>Индикатор прогресса страницы</h2>
@@ -622,15 +709,14 @@ img {
                     <p class="paragraf">Ключевые моменты в CSS: фиксированное позиционирование (<code>position: fixed</code>) вверху экрана, начальная ширина 0% и анимация, привязанная к временной шкале прокрутки всего документа (<code>animation-timeline: scroll(root block)</code>). Анимация <code>fill-progress</code> изменяет свойство <code>width</code> элемента от 0% до 100% по мере прокрутки пользователем содержимого страницы.</p>
                     <div class="code-block">
                         <pre><code class="language-css">.page-progress-bar {
-  position: fixed; /* Фиксированное позиционирование относительно вьюпорта */
-  top: 0; /* Вверху экрана */
-  left: 0; /* Слева экрана */
-  width: 0%; /* Начальная ширина 0% */
-  height: 5px; /* Высота индикатора */
-  background-color: var(--accent-primary); /* Цвет из CSS переменных темы */
-  z-index: 1000; /* Убеждаемся, что индикатор поверх другого контента */
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 0;
+  height: 5px;
+  background-color: var(--accent-primary);
+  z-index: 1000;
   
-  /* Начальное состояние для плавного появления при переключении вкладок */
   visibility: hidden;
   opacity: 0;
   transition: opacity 0.3s ease, visibility 0s ease 0.3s;
@@ -643,19 +729,18 @@ img {
   animation-timeline: scroll(root block); 
 }
 
-/* Класс для отображения прогресс-бара, когда активна соответствующая вкладка */
 .page-progress-bar.progress-bar-active-on-tab {
   visibility: visible;
   opacity: 1;
-  transition: opacity 0.3s ease, visibility 0s ease 0s; /* Плавное появление */
+  transition: opacity 0.3s ease, visibility 0s ease 0s;
 }
 
 @keyframes fill-progress {
   from {
-    width: 0%; /* Анимация начинается с ширины 0% */
+    width: 0%;
   }
   to {
-    width: 100%; /* Анимация заканчивается шириной 100% */
+    width: 100%;
   }
 }</code></pre>
                     </div>
@@ -674,7 +759,6 @@ img {
             </div>
         </section>
 
-        <!-- Section 6: Polyfill and Limitations -->
         <section id="polyfill" class="content-section">
             <div class="section-header">
                 <h2>Polyfill, поддержка браузерами и производительность</h2>
@@ -732,7 +816,6 @@ img {
             </div>
         </section>
 
-        <!-- Section 7: Card Stack Animation -->
         <section id="card-stack" class="content-section recipe-example-section">
             <div class="section-header">
                 <h2>Эффект "Стопка Карточек" при скролле</h2>
@@ -778,7 +861,7 @@ img {
                     <p class="paragraf">Каждая карточка имеет свою анимацию входа (<code>card-entry</code>), которая срабатывает, когда карточка появляется во вьюпорте. За счет <code>position: sticky</code> и немного отличающихся значений <code>top</code>, карточки фиксируются одна за другой, создавая эффект стопки. Контейнер <code>.card-stack-example-area</code> должен иметь достаточную высоту (например, <code>350vh</code>), чтобы обеспечить пространство для прокрутки и работы sticky-эффекта для всех карточек.</p>
                     <div class="code-block">
                         <pre><code class="language-css">.card-stack-example-area {
-  height: 350vh; /* Высота для обеспечения скролла */
+  height: 350vh;
   position: relative;
   padding-top: 5vh;
   margin-bottom: 10vh;
@@ -788,7 +871,7 @@ img {
   height: 70vh;
   width: 70%;
   max-width: 500px;
-  margin: 0 auto 15vh auto; /* Отступ снизу для эффекта "наезда" */
+  margin: 0 auto 15vh auto;
   background: var(--bg-elevated, var(--bg-secondary));
   border: 1px solid var(--border-color);
   border-radius: 15px;
@@ -827,7 +910,6 @@ img {
   line-height: 1.6;
 }
 
-/* Разные 'top' для эффекта стопки */
 .card-stack-card.card-1 { top: 10vh; }
 .card-stack-card.card-2 { top: 13vh; }
 .card-stack-card.card-3 { top: 16vh; }
@@ -1061,17 +1143,21 @@ img {
             </div>
         </section>
 
-        <!-- 3D Cube Rotation Section -->
         <section id="cube-3d" class="content-section recipe-example-section tab-pane">
-            <div class="docs-block">
-                <h2>Демонстрация вращения 3D куба при скролле</h2>
+            <div class="section-header">
+                <h2>Вращение 3D куба при скролле</h2>
+                <p>Вращение 3D-куба вокруг осей X и Y с помощью независимых областей прокрутки.</p>
+            </div>
+            <div class="section-body">
+                <div class="docs-block">
+                <h3>Общее описание и ключевые CSS-свойства</h3>
                 <p>
                     Этот пример демонстрирует, как можно вращать 3D-объект (в данном случае, простой куб) вокруг осей X и Y с помощью прокрутки двух независимых областей.
                     Одна область контролирует вращение по горизонтали (ось Y куба), а другая – по вертикали (ось X куба).
                 </p>
                 <p>
-                    Ключевые CSS-свойства, используемые для этого эффекта:
-                    <ul>
+                        Ключевые CSS-свойства, используемые для этого эффекта:
+                    <ul style="margin-left: 1rem;">
                         <li><code>timeline-scope: --cubeScrollerX, --cubeScrollerY;</code> на общем контейнере для объявления именованных временных шкал.</li>
                         <li><code>scroll-timeline-name: --cubeScrollerX;</code> и <code>scroll-timeline-axis: x;</code> (аналогично для Y) на элементах-скрабберах.</li>
                         <li><code>animation-timeline: --cubeScrollerX, --cubeScrollerY;</code> на элементе сцены с кубом, чтобы связать анимации с соответствующими временными шкалами.</li>
@@ -1136,60 +1222,125 @@ img {
                 <pre><code class="language-css">
 .cube-3d-body-wrapper {
   timeline-scope: --cubeScrollerX, --cubeScrollerY;
-  overflow: visible; /* Важно для корректного отображения 3D */
+  overflow: visible; /* Важно, чтобы perspective для #tridiv не обрезался */
+  padding: 1rem;
+}
+
+.cube-scroller-card {
+  background-color: var(--bg-tertiary, #2a2a2a);
+  padding: 1rem;
+  min-height: 7rem;
+  border: 1px solid var(--border-color, #444);
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  scroll-snap-type: both mandatory; /* Для прилипания при скролле */
 }
 
 .scroll-x-container {
   scroll-timeline-name: --cubeScrollerX;
   scroll-timeline-axis: x;
   overflow-x: scroll;
+  overflow-y: hidden;
 }
 
 .scroll-y-container {
   scroll-timeline-name: --cubeScrollerY;
   scroll-timeline-axis: y;
   overflow-y: scroll;
+  overflow-x: hidden;
+  height: 7rem;
+}
+
+.scroll-content {
+  display: flex;
+  flex-wrap: nowrap;
+  height: 100%; 
+  width: 100%;
+}
+.scroll-x-container .scroll-content { flex-direction: row; width: 400%; }
+.scroll-y-container .scroll-content { flex-direction: column; height: 400%; }
+
+.scroll-content-item {
+   flex-shrink: 0;
+   width: 100%;
+   height: 100%;
+   scroll-snap-align: start;
+   padding: 10px 15px;
+   display: flex;
+   align-items: center;
+   justify-content: center;
+   text-align: center;
+   box-sizing: border-box;
+}
+
+.cube-viewer {
+  background-color: var(--bg-secondary, #1e1e1e);
+  border: 1px solid var(--border-color, #444);
+  border-radius: 12px;
+  padding: 1rem;
+  min-height: 400px;
+  position: relative;
+  overflow: hidden;
 }
 
 #tridiv {
-  perspective: 1000px;
-  font-size: 10px; /* Базовый размер для 'em' в кубе */
+  perspective: 800px;
+  position: absolute;
+  top: 0; left: 0; right: 0; bottom: 0;
+  font-size: 10px;
   overflow: visible;
 }
 
 .scene {
+  position: absolute;
   width: 100%; height: 100%;
   top: 50%; left: 50%;
+  transform-style: preserve-3d;
   transform: translate(-50%, -50%) 
              rotateX(var(--cube-x-angle, -25deg))
              rotateY(var(--cube-y-angle, -25deg))
              scale(var(--cube-scale, 0.8));
   animation: rotateHorizontalCube linear, rotateVerticalCube linear;
   animation-timeline: --cubeScrollerX, --cubeScrollerY;
-  transform-style: preserve-3d;
 }
 
 .shape.demo-cube {
-  width: 15em; height: 15em; /* 150px x 150px */
+  position: absolute;
+  width: 15em; height: 15em;
+  top: 50%; left: 50%;
+  margin-left: -7.5em;
+  margin-top: -7.5em; 
   transform-style: preserve-3d;
-  margin-top: -7.5em; margin-left: -7.5em; /* Центрирование */
 }
 
 .demo-cube .face {
-  width: 15em; height: 15em;
   position: absolute;
+  width: 15em; height: 15em;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.6em;
+  font-weight: bold;
+  color: var(--text-on-accent-strong, #FFFFFF);
+  border: 1px solid rgba(255, 255, 255, 0.35); /* Исправлено */
   backface-visibility: hidden;
-  border: 1px solid #333;
-  display: flex; align-items: center; justify-content: center;
-  color: white; font-size: 1.5em; font-weight: bold;
+  box-sizing: border-box;
+  padding: 0.5em;
+  text-align: center;
 }
 
-/* Пример позиционирования одной грани */
-.demo-cube .ft { transform: translateZ(7.5em); background-color: rgba(229, 57, 53, 0.85); }
-/* ... стили для остальных 5 граней ... */
+.demo-cube .ft { transform: translateZ(7.5em); background-color: var(--color-red-700-alpha-85, rgba(229, 57, 53, 0.85)); }
+.demo-cube .bk { transform: rotateY(180deg) translateZ(7.5em); background-color: var(--color-green-700-alpha-85, rgba(67, 160, 71, 0.85)); }
+.demo-cube .rt { transform: rotateY(90deg) translateZ(7.5em); background-color: var(--color-blue-700-alpha-85, rgba(25, 118, 210, 0.85)); }
+.demo-cube .lt { transform: rotateY(-90deg) translateZ(7.5em); background-color: var(--color-yellow-600-alpha-85, rgba(253, 216, 53, 0.85)); }
+.demo-cube .tp { transform: rotateX(90deg) translateZ(7.5em); background-color: var(--color-purple-700-alpha-85, rgba(123, 31, 162, 0.85)); }
+.demo-cube .bm { transform: rotateX(-90deg) translateZ(7.5em); background-color: var(--color-orange-500-alpha-85, rgba(255, 138, 101, 0.85)); }
 
-@property --cube-x-angle { syntax: "&lt;angle&gt;"; inherits: false; initial-value: -25deg; }
-@property --cube-y-angle { syntax: "&lt;angle&gt;"; inherits: false; initial-value: -25deg; }
+@property --cube-x-angle { syntax: "<angle>"; inherits: false; initial-value: -25deg; }
+@property --cube-y-angle { syntax: "<angle>"; inherits: false; initial-value: -25deg; }
+@property --cube-scale { syntax: "<number>"; inherits: false; initial-value: 0.8; } /* Добавлено */
 
 @keyframes rotateHorizontalCube {
   from { --cube-y-angle: -25deg; }
@@ -1242,6 +1393,7 @@ img {
                     </div>
                 </div>
             </div>
+        </div>
         </section>
 
     </main>

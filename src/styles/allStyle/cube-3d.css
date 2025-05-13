@@ -4,14 +4,16 @@
   timeline-scope: --cubeScrollerX, --cubeScrollerY;
   /* Ensure this wrapper itself doesn't cause unexpected overflow issues for its children like cube-viewer */
   overflow: visible; 
+  font-family: var(--font-family-sans-serif, 'Afacad', 'Inter', sans-serif); /* Apply theme font */
 }
 
 .cube-controls-container {
   max-width: 1200px;
-  margin: 0 auto;
+  margin: 2rem auto; /* Add some margin for better separation if this is a top-level container in the tab */
   display: grid;
-  grid-gap: 1rem; 
+  grid-gap: 1.5rem; /* Consistent gap */
   grid-template-rows: auto auto; /* Rows for scrollers, then viewer */
+  padding-bottom: 1rem; /* Add some space at the bottom of the controls */
 }
 
 @media (min-width: 768px) { 
@@ -21,24 +23,25 @@
   }
   .cube-viewer {
     grid-column: 1 / span 2; /* Viewer spans both columns, on the next "implicit" row */
-    margin-top: 1rem; 
+    margin-top: 1.5rem; 
   }
 }
 
 .cube-scroller-card {
-  background-color: #e0f7fa; 
-  color: #004d40; 
-  padding: 0.5rem;
-  height: 6rem; 
-  border: 1px solid #b2dfdb; 
-  border-radius: 4px;
-  text-transform: uppercase;
+  background-color: var(--bg-tertiary); 
+  color: var(--text-secondary); 
+  padding: 1rem; /* Consistent padding */
+  min-height: 7rem; 
+  border: 1px solid var(--border-color); 
+  border-radius: 8px; /* Consistent radius */
+  text-transform: none; /* Softer look */
   overflow: hidden; /* Crucial: will be overridden by axis-specific overflow */
   scroll-snap-type: both mandatory; /* Snap on the active axis */
-  font-size: 0.9em;
+  font-size: 0.95em;
   display: flex; 
   align-items: center;
   justify-content: center;
+  box-shadow: var(--shadow-elevation); /* Theme shadow */
 }
 
 .cube-scroller-card .scroll-content {
@@ -53,12 +56,15 @@
    width: 100%;
    height: 100%;
    scroll-snap-align: start;
-   padding: 10px;
+   padding: 10px 15px; /* Adjusted padding for better text fit */
    display: flex;
    align-items: center;
    justify-content: center;
    text-align: center;
    box-sizing: border-box;
+   font-size: 0.9em; /* Slightly smaller for scroller items */
+   line-height: 1.3; /* Improved line height for scroller text */
+   color: var(--text-secondary); /* Ensure theme color */
 }
 
 .scroll-x-container {
@@ -77,6 +83,8 @@
   scroll-timeline-name: --cubeScrollerY;
   overflow-y: scroll;
   overflow-x: hidden;
+  /* Ensure consistent height with horizontal scroller */
+  height: var(--scroller-height, 7rem); 
 }
 .scroll-y-container .scroll-content {
   flex-direction: column;
@@ -84,129 +92,120 @@
 }
 
 .cube-viewer {
-  background: #ffffff; 
-  border: 1px solid #e0e0e0; 
-  border-radius: 4px;
-  padding: 1rem;
-  height: 45vh; 
-  min-height: 350px; /* Minimum pixel height */
+  background-color: var(--bg-secondary); /* Use secondary for consistency with other example blocks */
+  border: 1px solid var(--border-color); 
+  border-radius: 12px; /* Match .example-container */
+  padding: 1rem;    /* Match .example-container */
+  height: auto;      /* Allow content to define height */
+  min-height: 600px; 
   position: relative;
   z-index: 1; 
-  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+  box-shadow: var(--shadow-elevation);
   overflow: hidden; /* To contain the #tridiv if it tries to overflow viewer */
+  margin-top: 1rem; /* Added margin-top for spacing when stacked on mobile */
 }
 
 @media (max-width: 767px) { 
   .cube-viewer {
     grid-column: 1 / span 1; 
     margin-top: 1rem;
-    height: 40vh;
+    min-height: 350px;
+  }
+  .cube-controls-container {
+    grid-gap: 1rem; /* Smaller gap on mobile */
+  }
+  .cube-scroller-card {
+    min-height: 6rem; /* Slightly smaller cards on mobile */
   }
 }
 
 #tridiv {
-  perspective: 1000px; 
+  perspective: 800px; 
   position: absolute;
   top: 0; left: 0; right: 0; bottom: 0;
   width: 100%; height: 100%;
-  font-size: 10px; /* !IMPORTANT for em units of cube: 1em = 10px */
-  overflow: visible; /* Allow 3D elements to go outside bounds if needed */
+  font-size: 10px; /* Base size for em units */
+  overflow: visible;
+  margin: auto; /* Center #tridiv within .cube-viewer if needed */
 }
 
-.scene, .shape, .face, .face-wrapper {
-  position: absolute;
-  transform-style: preserve-3d;
-}
-
+/* Basic 3D setup */
 .scene {
+  position: absolute;
   width: 100%; 
   height: 100%;
-  top: 50%; left: 50%;
+  top: 50%; 
+  left: 50%;
+  transform-style: preserve-3d;
   transform: translate(-50%, -50%) 
              rotateX(var(--cube-x-angle, -25deg))
              rotateY(var(--cube-y-angle, -25deg))
-             scale(var(--cube-scale, 0.8)); 
-  animation: rotateHorizontalCube linear, rotateVerticalCube linear; /* Apply both animations */
-  animation-timeline: --cubeScrollerX, --cubeScrollerY; /* Link to respective timelines */
-  transform-style: preserve-3d; /* Explicitly ensure preserve-3d on scene */
+             scale(var(--cube-scale, 0.8));
+  animation: rotateHorizontalCube linear, rotateVerticalCube linear;
+  animation-timeline: --cubeScrollerX, --cubeScrollerY;
+  font-family: var(--font-family-monospace, monospace); /* Monospace for face text for a techy feel */
+  font-weight: bold;
 }
 
-.shape { 
-  top: 50%; left: 50%; 
-  width: 0; height: 0; 
-  transform-origin: 50% 50% 50%; 
+/* Cube shape container */
+.shape.demo-cube {
+  position: absolute;
+  width: 15em; 
+  height: 15em;
+  top: 50%; 
+  left: 50%;
+  margin-left: -7.5em; /* Half width */
+  margin-top: -7.5em;  /* Half height */
+  transform-style: preserve-3d;
 }
 
-.face, .face-wrapper {
-  overflow: hidden;
-  transform-origin: 0 0; 
-  backface-visibility: hidden;
-  box-sizing: border-box;
-}
-
-.face {
-  background-size: 100% 100% !important;
-  background-position: center;
-  border: 1px solid #333;
-  display: flex; 
+/* Common face styles */
+.demo-cube .face {
+  position: absolute;
+  width: 15em; 
+  height: 15em;
+  display: flex;
   align-items: center;
   justify-content: center;
-  color: white;
-  font-size: 1.5em; /* 15px if #tridiv font-size is 10px */
+  font-size: 1.6em; /* Slightly increased size for face text */
   font-weight: bold;
-  text-shadow: 1px 1px 2px rgba(0,0,0,0.7);
+  color: var(--text-on-accent-strong, #FFFFFF); /* High contrast text on colored faces */
+  border: 1px solid rgba(255, 255, 255, 0.35); /* Brighter border on faces */
+  text-shadow: 0px 1px 3px rgba(0, 0, 0, 0.7); /* Stronger text shadow */
+  backface-visibility: hidden;
+  box-sizing: border-box; /* Ensure padding/border included in width/height */
+  padding: 0.5em; /* Add some padding to face text */
+  text-align: center; /* Center text on face */
 }
 
-.photon-shader { 
-  position: absolute; left: 0; top: 0; width: 100%; height: 100%;
-  /* Example: background-color: rgba(255, 255, 255, 0.1); */
-  /* For this demo, text is added directly to faces, so shader isn't strictly needed for visuals */
-}
+/* Face colors */
+.demo-cube .ft { background-color: var(--color-red-700-alpha-85, rgba(229, 57, 53, 0.85)); }   /* Red */
+.demo-cube .bk { background-color: var(--color-green-700-alpha-85, rgba(67, 160, 71, 0.85)); }   /* Green */
+.demo-cube .rt { background-color: var(--color-blue-700-alpha-85, rgba(25, 118, 210, 0.85)); }  /* Blue */
+.demo-cube .lt { background-color: var(--color-yellow-600-alpha-85, rgba(253, 216, 53, 0.85)); }  /* Yellow */
+.demo-cube .tp { background-color: var(--color-purple-700-alpha-85, rgba(123, 31, 162, 0.85)); }  /* Purple */
+.demo-cube .bm { background-color: var(--color-orange-500-alpha-85, rgba(255, 138, 101, 0.85)); } /* Orange */
 
-/* Generic Cuboid Styles - defines how faces are arranged */
-/* These are somewhat conceptual as transforms on faces define actual appearance */
-.cuboid .ft, .cuboid .bk { width: 100%; height: 100%; }
-.cuboid .rt, .cuboid .lt { width: 100%; height: 100%; } 
-.cuboid .tp, .cuboid .bm { width: 100%; height: 100%; } 
+/* Face positions - cube size is 15em */
+.demo-cube .ft { transform: translateZ(7.5em); }                   /* Front */
+.demo-cube .bk { transform: rotateY(180deg) translateZ(7.5em); }   /* Back */
+.demo-cube .rt { transform: rotateY(90deg) translateZ(7.5em); }    /* Right */
+.demo-cube .lt { transform: rotateY(-90deg) translateZ(7.5em); }   /* Left */
+.demo-cube .tp { transform: rotateX(90deg) translateZ(7.5em); }    /* Top */
+.demo-cube .bm { transform: rotateX(-90deg) translateZ(7.5em); }   /* Bottom */
 
-
-.demo-cube { /* This class is on the .shape element */
-  width: 15em;  /* Cube logical width: 15em * 10px/em = 150px */
-  height: 15em; /* Cube logical height */
-  /* Centering margin for the shape itself within the scene's local 0,0 */
-  margin-top: calc(-15em / 2);  
-  margin-left: calc(-15em / 2); 
-  transform-style: preserve-3d; /* Explicitly ensure preserve-3d on the cube shape */
-}
-
-.demo-cube .face { /* Common properties for all faces of this cube */
-  width: 15em;  /* Actual face dimension */
-  height: 15em; /* Actual face dimension */
-  position: absolute; /* Faces are positioned absolutely within the .shape */
-}
-
-/* Position and color each face of the demo-cube */
-/* For a proper cube, we need to first translate then rotate */
-.demo-cube .ft { transform: translateZ(7.5em); background-color: rgba(229, 57, 53, 0.85); } /* Front - Red */
-.demo-cube .bk { transform: translateZ(-7.5em) rotateY(180deg); background-color: rgba(67, 160, 71, 0.85); } /* Back - Green */
-.demo-cube .rt { transform: translateX(7.5em) rotateY(90deg); background-color: rgba(25, 118, 210, 0.85); } /* Right - Blue */
-.demo-cube .lt { transform: translateX(-7.5em) rotateY(-90deg); background-color: rgba(253, 216, 53, 0.85); } /* Left - Yellow */
-.demo-cube .tp { transform: translateY(-7.5em) rotateX(90deg); background-color: rgba(123, 31, 162, 0.85); } /* Top - Purple */
-.demo-cube .bm { transform: translateY(7.5em) rotateX(-90deg); background-color: rgba(255, 138, 101, 0.85); } /* Bottom - Orange */
-
-
-/* CSS Custom Properties for rotation angles and scale */
+/* Animation properties */
 @property --cube-x-angle { syntax: "<angle>"; inherits: false; initial-value: -25deg; }
 @property --cube-y-angle { syntax: "<angle>"; inherits: false; initial-value: -25deg; }
 @property --cube-scale { syntax: "<number>"; inherits: false; initial-value: 0.8; }
 
-
+/* Animations */
 @keyframes rotateHorizontalCube {
-  from { --cube-y-angle: -25deg; } /* Start from initial Y */
-  to   { --cube-y-angle: calc(-25deg + 360deg); } /* Full rotation relative to start */
+  from { --cube-y-angle: -25deg; } 
+  to   { --cube-y-angle: calc(-25deg + 360deg); }
 }
 
 @keyframes rotateVerticalCube {
-  from { --cube-x-angle: -25deg; } /* Start from initial X */
-  to   { --cube-x-angle: calc(-25deg + 360deg); } /* Full rotation relative to start */
+  from { --cube-x-angle: -25deg; }
+  to   { --cube-x-angle: calc(-25deg + 360deg); }
 } 
