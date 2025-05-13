@@ -18,6 +18,8 @@
     <link rel="stylesheet" href="/src/styles/allStyle/card-stack.css">
     <link rel="stylesheet" href="/src/styles/allStyle/cascading-text-reveal.css">
     <link rel="stylesheet" href="/src/styles/allStyle/scaling-images.css">
+    <link rel="stylesheet" href="./src/styles/allStyle/svg-animation.css">
+    <link rel="stylesheet" href="./src/styles/allStyle/cube-3d.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 <body>
@@ -201,6 +203,7 @@ img {
                         <li><a href="#card-stack" class="recipe-nav-link" data-title="Карточки (Card Stack)">Стопка Карточек</a></li>
                         <li><a href="#cascading-text" class="recipe-nav-link" data-title="Каскадное появление текста">Каскадное появление текста</a></li>
                         <li><a href="#scaling-images" class="recipe-nav-link" data-title="Масштабирование изображений">Масштабирование изображений</a></li>
+                        <li><a href="#cube-3d" class="recipe-nav-link" data-title="3D Куб">3D Куб</a></li>
                     </ul>
                 </nav>
             </div>
@@ -240,7 +243,7 @@ img {
 }
 
 .sectionPin {
-  height: 300vh; /* Пространство для скролла */
+  height: 300vh;
   overflow: visible;
   view-timeline-name: --section-pin-tl; /* Используется для привязки анимации */
   view-timeline-axis: block; /* Отслеживание по вертикальной оси */
@@ -249,18 +252,18 @@ img {
 .pin-wrap-sticky {
   height: 100vh;
   width: 100vw;
-  position: sticky; /* Элемент "прилипает" */
+  position: sticky;
   top: 0;
-  overflow-x: hidden; /* Скрываем горизонтальный скроллбар */
+  overflow-x: hidden;
 }
 
 .pin-wrap {
   height: 100vh;
-  width: 179vmax; /* Широкий контейнер для горизонтального контента */
-  will-change: transform; /* Оптимизация производительности */
-  animation: linear move forwards; /* Применяем анимацию 'move' */
-  animation-timeline: --section-pin-tl; /* Привязка к таймлайну */
-  animation-range: contain 0% contain 100%; /* Анимация активна, пока контейнер в зоне видимости */
+  width: 179vmax;
+  will-change: transform;
+  animation: linear move forwards;
+  animation-timeline: --section-pin-tl;
+  animation-range: contain 0% contain 100%;
 }</code></pre>
                     </div>
                 </div>
@@ -394,11 +397,11 @@ img {
                         <pre><code class="language-css">@keyframes reveal {
   from {
     opacity: 0;
-    transform: translateY(100px); /* Обновлено: было 20px, убран clip-path */
+    transform: translateY(100px);
   }
   to {
     opacity: 1;
-    transform: translateY(0px); /* Обновлено: было translateY(0), убран clip-path */
+    transform: translateY(0px);
   }
 }
 
@@ -453,26 +456,24 @@ img {
                     <div class="code-block">
                         <pre><code class="language-css">/* Базовые стили для изображения внутри слайда */
 .slide &gt; img {
-  object-fit: cover; /* Масштабирует изображение с сохранением пропорций, обрезая лишнее */
-  object-position: 100% 0; /* Начальная позиция изображения (справа по горизонтали, сверху по вертикали) */
-  display: block; /* Убирает лишние отступы */
+  object-fit: cover;
+  object-position: 100% 0;
+  display: block;
   width: 100%;
   height: 100%;
-  position: absolute; /* Для точного позиционирования object-position */
-  right: 0; /* Выравнивание по правому краю слайда */
+  position: absolute
+  right: 0;
 }
 
-/* Ключевые кадры для анимации параллакса */
-@keyframes adjust-image { /* Имя изменено с parallax-scroll */
-  0% { /* Начальное состояние (соответствует object-position в .slide > img) */
+@keyframes adjust-image {
+  0% {
     object-position: 100% 0; /* Изображение смещено вправо */
   }
-  100% { /* Конечное состояние */
+  100% {
     object-position: 0 0;   /* Изображение смещено влево */
   }
 }
 
-/* Применение анимации к изображениям в слайдах */
 .slide &gt; img {
   animation: adjust-image linear both; /* 'both' удерживает состояние анимации */
   animation-timeline: view(x); /* Анимация привязана к горизонтальной прокрутке родительского .slide */
@@ -523,21 +524,20 @@ img {
                     </div>
                     <div class="code-block">
                         <pre><code class="language-css">.super-scroll {
-  height: 200vh; /* Пространство для скролла */
+  height: 200vh;
   position: relative;
-  view-timeline-name: --super-scroll-tl; /* Имя таймлайна изменено (было --svg-scroll-tl) */
+  view-timeline-name: --super-scroll-tl;
   view-timeline-axis: block;
   overflow: visible;
   padding-inline: 2vw;
 }
 
-/* Анимация для первого SVG элемента (круга) */
-.super-svg-1 { /* Селектор изменен, анимация применяется к SVG контейнеру */
-  stroke-dasharray: 251; /* Для эффекта "рисования" */
+.super-svg-1 {
+  stroke-dasharray: 251;
   stroke-dashoffset: 251;
-  animation: circle-rotate linear forwards; /* Имя keyframes изменено */
+  animation: circle-rotate linear forwards;
   animation-timeline: --super-scroll-tl; /* Привязка к таймлайну */
-  animation-range: contain 0% contain 100%; /* Диапазон изменен */
+  animation-range: contain 0% contain 100%;
 }
 
 @keyframes circle-rotate {
@@ -551,17 +551,15 @@ img {
   }
 }
 
-/* Анимация для SVG текста */
 .super-svg-text text {
   stroke-dasharray: 900; /* Для эффекта "рисования" текста */
   stroke-dashoffset: 900;
-  animation: text-draw linear forwards; /* Имя keyframes изменено */
+  animation: text-draw linear forwards;
   animation-timeline: --super-scroll-tl; /* Привязка к таймлайну */
-  animation-range: contain 0% contain 100%; /* Диапазон изменен */
-  /* ... другие стили для .super-svg-text text из файла super-scroll.css ... */
+  animation-range: contain 0% contain 100%;
 }
 
-@keyframes text-draw { /* Новые keyframes для текста */
+@keyframes text-draw {
   0% {
     stroke-dashoffset: 900;
   }
@@ -1056,6 +1054,189 @@ img {
                         </div>
                          <div class="img-wrapper" style="background-image: url('./src/img/parallax/2.jpg');">
                             <div class="root">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 3D Cube Rotation Section -->
+        <section id="cube-3d" class="content-section recipe-example-section tab-pane">
+            <div class="docs-block">
+                <h2>Демонстрация вращения 3D куба при скролле</h2>
+                <p>
+                    Этот пример демонстрирует, как можно вращать 3D-объект (в данном случае, простой куб) вокруг осей X и Y с помощью прокрутки двух независимых областей.
+                    Одна область контролирует вращение по горизонтали (ось Y куба), а другая – по вертикали (ось X куба).
+                </p>
+                <p>
+                    Ключевые CSS-свойства, используемые для этого эффекта:
+                    <ul>
+                        <li><code>timeline-scope: --cubeScrollerX, --cubeScrollerY;</code> на общем контейнере для объявления именованных временных шкал.</li>
+                        <li><code>scroll-timeline-name: --cubeScrollerX;</code> и <code>scroll-timeline-axis: x;</code> (аналогично для Y) на элементах-скрабберах.</li>
+                        <li><code>animation-timeline: --cubeScrollerX, --cubeScrollerY;</code> на элементе сцены с кубом, чтобы связать анимации с соответствующими временными шкалами.</li>
+                        <li><code>@property --cube-x-angle { syntax: "<angle>"; inherits: false; initial-value: -25deg; }</code> (и <code>--cube-y-angle</code>) для регистрации кастомных CSS-свойств, которые будут анимироваться.</li>
+                        <li><code>perspective</code> на родительском контейнере (<code>#tridiv</code>) для создания 3D-контекста.</li>
+                        <li><code>transform-style: preserve-3d;</code> на сцене и на самом кубе, чтобы дочерние элементы корректно отображались в 3D-пространстве.</li>
+                        <li>Базовый <code>font-size</code> (например, <code>10px</code>) на контейнере <code>#tridiv</code> важен, так как размеры куба и его граней заданы в <code>em</code>, что делает их относительными к этому значению.</li>
+                    </ul>
+                    Куб состоит из шести граней (<code>&lt;div class="face"&gt;</code>), каждая из которых позиционируется с помощью CSS 3D-трансформаций.
+                </p>
+            </div>
+
+            <div class="code-block">
+                <p>Пример HTML разметки:</p>
+                <pre><code class="language-html">
+&lt;!-- Обертка для задания timeline-scope --&gt;
+&lt;div class="cube-3d-body-wrapper"&gt;
+  &lt;!-- Контейнер для скроллеров и области просмотра куба --&gt;
+  &lt;div class="cube-controls-container"&gt;
+    &lt;!-- Горизонтальный скроллер --&gt;
+    &lt;div class="cube-scroller-card scroll-x-container"&gt;
+      &lt;div class="scroll-content"&gt;
+        &lt;div class="scroll-content-item"&gt;Скролл X: Старт&lt;/div&gt;
+        &lt;div class="scroll-content-item"&gt;Скролл X: Середина&lt;/div&gt;
+        &lt;div class="scroll-content-item"&gt;Скролл X: Почти конец&lt;/div&gt;
+        &lt;div class="scroll-content-item"&gt;Скролл X: Конец&lt;/div&gt;
+      &lt;/div&gt;
+    &lt;/div&gt;
+
+    &lt;!-- Вертикальный скроллер --&gt;
+    &lt;div class="cube-scroller-card scroll-y-container"&gt;
+      &lt;div class="scroll-content"&gt;
+        &lt;div class="scroll-content-item"&gt;Скролл Y: Старт&lt;/div&gt;
+        &lt;div class="scroll-content-item"&gt;Скролл Y: Середина&lt;/div&gt;
+        &lt;div class="scroll-content-item"&gt;Скролл Y: Почти конец&lt;/div&gt;
+        &lt;div class="scroll-content-item"&gt;Скролл Y: Конец&lt;/div&gt;
+      &lt;/div&gt;
+    &lt;/div&gt;
+
+    &lt;!-- Область просмотра куба --&gt;
+    &lt;div class="cube-viewer"&gt;
+      &lt;div id="tridiv"&gt;
+        &lt;div class="scene"&gt;
+          &lt;div class="shape cuboid demo-cube"&gt;
+            &lt;div class="face ft"&gt;Передняя&lt;/div&gt;
+            &lt;div class="face bk"&gt;Задняя&lt;/div&gt;
+            &lt;div class="face rt"&gt;Правая&lt;/div&gt;
+            &lt;div class="face lt"&gt;Левая&lt;/div&gt;
+            &lt;div class="face tp"&gt;Верхняя&lt;/div&gt;
+            &lt;div class="face bm"&gt;Нижняя&lt;/div&gt;
+          &lt;/div&gt;
+        &lt;/div&gt;
+      &lt;/div&gt;
+    &lt;/div&gt;
+  &lt;/div&gt;
+&lt;/div&gt;
+                </code></pre>
+            </div>
+
+            <div class="code-block">
+                <p>Ключевые моменты CSS (из <code>cube-3d.css</code>):</p>
+                <pre><code class="language-css">
+.cube-3d-body-wrapper {
+  timeline-scope: --cubeScrollerX, --cubeScrollerY;
+  overflow: visible; /* Важно для корректного отображения 3D */
+}
+
+.scroll-x-container {
+  scroll-timeline-name: --cubeScrollerX;
+  scroll-timeline-axis: x;
+  overflow-x: scroll;
+}
+
+.scroll-y-container {
+  scroll-timeline-name: --cubeScrollerY;
+  scroll-timeline-axis: y;
+  overflow-y: scroll;
+}
+
+#tridiv {
+  perspective: 1000px;
+  font-size: 10px; /* Базовый размер для 'em' в кубе */
+  overflow: visible;
+}
+
+.scene {
+  width: 100%; height: 100%;
+  top: 50%; left: 50%;
+  transform: translate(-50%, -50%) 
+             rotateX(var(--cube-x-angle, -25deg))
+             rotateY(var(--cube-y-angle, -25deg))
+             scale(var(--cube-scale, 0.8));
+  animation: rotateHorizontalCube linear, rotateVerticalCube linear;
+  animation-timeline: --cubeScrollerX, --cubeScrollerY;
+  transform-style: preserve-3d;
+}
+
+.shape.demo-cube {
+  width: 15em; height: 15em; /* 150px x 150px */
+  transform-style: preserve-3d;
+  margin-top: -7.5em; margin-left: -7.5em; /* Центрирование */
+}
+
+.demo-cube .face {
+  width: 15em; height: 15em;
+  position: absolute;
+  backface-visibility: hidden;
+  border: 1px solid #333;
+  display: flex; align-items: center; justify-content: center;
+  color: white; font-size: 1.5em; font-weight: bold;
+}
+
+/* Пример позиционирования одной грани */
+.demo-cube .ft { transform: translateZ(7.5em); background-color: rgba(229, 57, 53, 0.85); }
+/* ... стили для остальных 5 граней ... */
+
+@property --cube-x-angle { syntax: "&lt;angle&gt;"; inherits: false; initial-value: -25deg; }
+@property --cube-y-angle { syntax: "&lt;angle&gt;"; inherits: false; initial-value: -25deg; }
+
+@keyframes rotateHorizontalCube {
+  from { --cube-y-angle: -25deg; }
+  to   { --cube-y-angle: calc(-25deg + 360deg); }
+}
+
+@keyframes rotateVerticalCube {
+  from { --cube-x-angle: -25deg; }
+  to   { --cube-x-angle: calc(-25deg + 360deg); }
+}
+                </code></pre>
+            </div>
+
+            <div class="demo-block">
+                <h3>Интерактивное демо:</h3>
+                <div class="cube-3d-body-wrapper">
+                    <div class="cube-controls-container">
+                        <div class="cube-scroller-card scroll-x-container">
+                            <div class="scroll-content">
+                                <div class="scroll-content-item">Горизонтальный скролл (Y-ось куба): Старт</div>
+                                <div class="scroll-content-item">Середина</div>
+                                <div class="scroll-content-item">Почти конец</div>
+                                <div class="scroll-content-item">Конец</div>
+                            </div>
+                        </div>
+                    
+                        <div class="cube-scroller-card scroll-y-container">
+                            <div class="scroll-content">
+                                <div class="scroll-content-item">Вертикальный скролл (X-ось куба): Старт</div>
+                                <div class="scroll-content-item">Середина</div>
+                                <div class="scroll-content-item">Почти конец</div>
+                                <div class="scroll-content-item">Конец</div>
+                            </div>
+                        </div>
+                    
+                        <div class="cube-viewer">
+                            <div id="tridiv">
+                                <div class="scene">
+                                    <div class="shape cuboid demo-cube">
+                                        <div class="face ft">Передняя</div>
+                                        <div class="face bk">Задняя</div>
+                                        <div class="face rt">Правая</div>
+                                        <div class="face lt">Левая</div>
+                                        <div class="face tp">Верхняя</div>
+                                        <div class="face bm">Нижняя</div>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
