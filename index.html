@@ -20,6 +20,7 @@
     <link rel="stylesheet" href="/src/styles/allStyle/scaling-images.css">
     <link rel="stylesheet" href="./src/styles/allStyle/svg-animation.css">
     <link rel="stylesheet" href="./src/styles/allStyle/cube-3d.css">
+    <link rel="stylesheet" href="./src/styles/allStyle/maze-game.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 <body>
@@ -199,6 +200,7 @@ img {
                         <li><a href="#cascading-text" class="recipe-nav-link" data-title="Каскадное появление текста">Каскадное появление текста</a></li>
                         <li><a href="#scaling-images" class="recipe-nav-link" data-title="Масштабирование изображений">Масштабирование изображений</a></li>
                         <li><a href="#cube-3d" class="recipe-nav-link" data-title="3D Куб">3D Куб</a></li>
+                        <li><a href="#maze-game" class="recipe-nav-link" data-title="Игра Лабиринт">Игра Лабиринт</a></li>
                     </ul>
                 </nav>
             </div>
@@ -1339,7 +1341,7 @@ img {
 
 @property --cube-x-angle { syntax: "<angle>"; inherits: false; initial-value: -25deg; }
 @property --cube-y-angle { syntax: "<angle>"; inherits: false; initial-value: -25deg; }
-@property --cube-scale { syntax: "<number>"; inherits: false; initial-value: 0.8; } /* Добавлено */
+@property --cube-scale { syntax: "<number>"; inherits: false; initial-value: 0.8; }
 
 @keyframes rotateHorizontalCube {
   from { --cube-y-angle: -25deg; }
@@ -1393,6 +1395,251 @@ img {
                 </div>
             </div>
         </div>
+        </section>
+
+        <section id="maze-game" class="content-section recipe-example-section">
+            <div class="section-header">
+                <h2>Игра "Лабиринт" управляемая скроллом</h2>
+                <p>Перемещение "игрока" по лабиринту с помощью общей прокрутки страницы.</p>
+            </div>
+            <div class="section-body">
+                <div class="docs-block">
+                    <h3>Описание эффекта</h3>
+                    <p class="paragraf">Этот пример демонстрирует создание интерактивной игры-лабиринта, где движение "игрока" (синий круг) полностью контролируется вертикальной и горизонтальной прокруткой внутри специального контейнера <code>.maze-container</code>. При приближении игрока к стенам лабиринта, они меняют свой цвет, создавая эффект "тепловой карты". Цель (зеленый пульсирующий круг) также анимирована.</p>
+                    <p class="paragraf">Ключевые особенности реализации:</p>
+                    <ul class="ul">
+                        <li class="li">Лабиринт создан с использованием чистого CSS, без JavaScript.</li>
+                        <li class="li">Движение игрока контролируется с помощью CSS-переменных <code>--x</code> и <code>--y</code>, которые привязаны к прокрутке контейнера <code>.maze-container</code> через <code>animation-timeline: scroll(x), scroll(y)</code> на элементе <code>.gameContainer</code>.</li>
+                        <li class="li">Эффект "тепловой карты" реализован с помощью CSS-вычислений, определяющих расстояние между игроком и каждой стеной, используя анимированные переменные.</li>
+                        <li class="li">Игра полностью самодостаточна и находится внутри контейнера <code>.maze-container</code>, который имеет свою собственную область прокрутки (<code>overflow: scroll</code>).</li>
+                        <li class="li">Игровое поле <code>.gameContainer</code> имеет <code>position: sticky</code> и центрируется внутри <code>.maze-container</code>, оставаясь в центре видимой области этого контейнера во время прокрутки.</li>
+                    </ul>
+                </div>
+
+                <div class="docs-block">
+                    <h3>HTML Структура</h3>
+                    <p class="paragraf">Основная HTML структура включает контейнер для прокрутки, внутреннюю область прокрутки, контейнер игры, контейнер для стен и контейнер для игрока.</p>
+                    <div class="code-block">
+                        <pre><code class="language-html">&lt;div class="maze-container"&gt;
+  &lt;div class="maze-instructions"&gt;Прокручивайте эту область, чтобы управлять движением игрока к цели&lt;/div&gt;
+  &lt;div class="maze-scrollable-area"&gt;
+    &lt;div class="gameContainer"&gt;
+      &lt;div class="walls"&gt;
+        &lt;!-- Стены генерируются с координатами --_x и --_y --&gt;
+        &lt;div style="--_x: 1; --_y: 0;"&gt;&lt;/div&gt;
+        &lt;div style="--_x: 7; --_y: 0;"&gt;&lt;/div&gt;
+        &lt;!-- Остальные стены ... --&gt;
+        &lt;div class="target" style="--_x: 9; --_y: 9;"&gt;&lt;/div&gt;
+      &lt;/div&gt;
+      
+      &lt;div class="playerContainer"&gt;
+        &lt;div class="player"&gt;&lt;/div&gt;
+      &lt;/div&gt;
+    &lt;/div&gt;
+  &lt;/div&gt;
+&lt;/div&gt;</code></pre>
+                    </div>
+                </div>
+
+                <div class="docs-block">
+                    <h3>CSS Реализация</h3>
+                    <p class="paragraf">Стили для этого эффекта находятся в <code>src/styles/allStyle/maze-game.css</code>. Ниже приведен полный код CSS:</p>
+                    <div class="code-block">
+                        <pre><code class="language-css">:root {
+  --maze-tile-size: 10;
+  --maze-player-size: 4;
+}
+
+.maze-container {
+  width: 100%;
+  height: 80vh;
+  min-height: 500px;
+  position: relative;
+  overflow: scroll;
+  border-radius: 8px;
+  border: 1px solid var(--border-color);
+}
+
+.maze-scrollable-area {
+  width: 250%;
+  height: 250%;
+  position: relative;
+}
+
+.gameContainer {
+  --x: 0;
+  --y: 0;
+  --xFix: min(max(var(--x), var(--maze-player-size)), (100 - var(--maze-player-size)));
+  --yFix: min(max(var(--y), var(--maze-player-size)), (100 - var(--maze-player-size)));
+  position: sticky;
+  left: calc(50% - 36vmin);
+  top: calc(50% - 36vmin);
+  width: 70vmin;
+  aspect-ratio: 1;
+  outline: 3px solid var(--accent-primary);
+  outline-offset: 3px;
+  container-type: inline-size;
+  border-radius: 8px;
+  box-shadow: 0 0 30px rgba(0,0,0,0.5);
+  background-image:
+    repeating-linear-gradient(var(--bg-secondary) 0, var(--border-color) 1px, var(--bg-secondary) calc(var(--maze-tile-size) * 1% - 1px), var(--border-color) calc(var(--maze-tile-size) * 1%)),
+    repeating-linear-gradient(90deg, var(--bg-secondary) 0, var(--border-color) 1px, var(--bg-secondary) calc(var(--maze-tile-size) * 1% - 1px), var(--border-color) calc(var(--maze-tile-size) * 1%));
+  animation: maze-x step-end, maze-y step-end;
+  animation-timeline: scroll(x), scroll(y);
+  z-index: 20;
+}
+
+.playerContainer {
+  position: absolute;
+  left: 0cqi;
+  top: 0cqi;
+  translate: calc(var(--xFix) * 1cqi) calc(var(--yFix) * 1cqi);
+}
+
+.player {
+  position: absolute;
+  inset: calc(var(--maze-player-size) * -1cqi);
+  background-color: var(--accent-secondary);
+  background-image: radial-gradient(ellipse at center, rgba(255,255,255,0.5) 0%, var(--accent-secondary) 60%, color-mix(in srgb, var(--accent-secondary), black 50%) 100%);
+  border-radius: 50%;
+  box-shadow: 0 0 12px var(--accent-secondary), 0 0 24px color-mix(in srgb, var(--accent-secondary), transparent 30%);
+}
+
+.walls {
+  position: absolute;
+  inset: 0%;
+}
+
+.walls div {
+  position: absolute;
+  left: calc(var(--_x) * var(--maze-tile-size) * 1cqi);
+  top: calc(var(--_y) * var(--maze-tile-size) * 1cqi);
+  width: calc(var(--maze-tile-size) * 1cqi);
+  height: calc(var(--maze-tile-size) * 1cqi);
+  background-color: hsl(calc(240 - clamp(0, var(--o), 100) * 0.66), 70%, calc(20% + clamp(0, 20 - var(--o), 20) * 1.75%));
+  border: 1px solid color-mix(in srgb, var(--border-color), transparent 50%);
+  box-shadow: inset 1px 1px 3px rgba(0,0,0,0.4), inset -1px -1px 3px rgba(255,255,255,0.03);
+  border-radius: 2px;
+  --_xMin: calc(var(--_x) * var(--maze-tile-size) - var(--maze-player-size) + 1);
+  --_yMin: calc(var(--_y) * var(--maze-tile-size) - var(--maze-player-size) + 1);
+  --_xMax: calc((var(--_x) + 1) * var(--maze-tile-size) + var(--maze-player-size) - 1);
+  --_yMax: calc((var(--_y) + 1) * var(--maze-tile-size) + var(--maze-player-size) - 1);
+  --x1: calc(round(up, max(0, var(--_xMin) - var(--xFix)), 100));
+  --x2: calc(round(down, min(0, var(--_xMax) - var(--xFix)), 100) * -1);
+  --y1: calc(round(up, max(0, var(--_yMin) - var(--yFix)), 100));
+  --y2: calc(round(down, min(0, var(--_yMax) - var(--yFix)), 100) * -1);
+  --o: calc(max(var(--x1), var(--x2), var(--y1), var(--y2)));
+}
+
+.walls .target {
+  background: none;
+  border-radius: 50%;
+  border: 4cqi solid var(--accent-primary);
+  animation: maze-target 1.5s infinite ease-in-out alternate;
+  box-shadow: 0 0 5px var(--accent-primary);
+}
+
+@keyframes maze-x {
+  0% { --x: 0; } 1% { --x: 1; } 2% { --x: 2; } 3% { --x: 3; } 4% { --x: 4; }
+  5% { --x: 5; } 6% { --x: 6; } 7% { --x: 7; } 8% { --x: 8; } 9% { --x: 9; }
+  10% { --x: 10; } 11% { --x: 11; } 12% { --x: 12; } 13% { --x: 13; } 14% { --x: 14; }
+  15% { --x: 15; } 16% { --x: 16; } 17% { --x: 17; } 18% { --x: 18; } 19% { --x: 19; }
+  20% { --x: 20; } 21% { --x: 21; } 22% { --x: 22; } 23% { --x: 23; } 24% { --x: 24; }
+  25% { --x: 25; } 26% { --x: 26; } 27% { --x: 27; } 28% { --x: 28; } 29% { --x: 29; }
+  30% { --x: 30; } 31% { --x: 31; } 32% { --x: 32; } 33% { --x: 33; } 34% { --x: 34; }
+  35% { --x: 35; } 36% { --x: 36; } 37% { --x: 37; } 38% { --x: 38; } 39% { --x: 39; }
+  40% { --x: 40; } 41% { --x: 41; } 42% { --x: 42; } 43% { --x: 43; } 44% { --x: 44; }
+  45% { --x: 45; } 46% { --x: 46; } 47% { --x: 47; } 48% { --x: 48; } 49% { --x: 49; }
+  50% { --x: 50; } 51% { --x: 51; } 52% { --x: 52; } 53% { --x: 53; } 54% { --x: 54; }
+  55% { --x: 55; } 56% { --x: 56; } 57% { --x: 57; } 58% { --x: 58; } 59% { --x: 59; }
+  60% { --x: 60; } 61% { --x: 61; } 62% { --x: 62; } 63% { --x: 63; } 64% { --x: 64; }
+  65% { --x: 65; } 66% { --x: 66; } 67% { --x: 67; } 68% { --x: 68; } 69% { --x: 69; }
+  70% { --x: 70; } 71% { --x: 71; } 72% { --x: 72; } 73% { --x: 73; } 74% { --x: 74; }
+  75% { --x: 75; } 76% { --x: 76; } 77% { --x: 77; } 78% { --x: 78; } 79% { --x: 79; }
+  80% { --x: 80; } 81% { --x: 81; } 82% { --x: 82; } 83% { --x: 83; } 84% { --x: 84; }
+  85% { --x: 85; } 86% { --x: 86; } 87% { --x: 87; } 88% { --x: 88; } 89% { --x: 89; }
+  90% { --x: 90; } 91% { --x: 91; } 92% { --x: 92; } 93% { --x: 93; } 94% { --x: 94; }
+  95% { --x: 95; } 96% { --x: 96; } 97% { --x: 97; } 98% { --x: 98; } 99% { --x: 99; }
+  100% { --x: 100; }
+}
+
+@keyframes maze-y {
+  0% { --y: 0; } 1% { --y: 1; } 2% { --y: 2; } 3% { --y: 3; } 4% { --y: 4; }
+  5% { --y: 5; } 6% { --y: 6; } 7% { --y: 7; } 8% { --y: 8; } 9% { --y: 9; }
+  10% { --y: 10; } 11% { --y: 11; } 12% { --y: 12; } 13% { --y: 13; } 14% { --y: 14; }
+  15% { --y: 15; } 16% { --y: 16; } 17% { --y: 17; } 18% { --y: 18; } 19% { --y: 19; }
+  20% { --y: 20; } 21% { --y: 21; } 22% { --y: 22; } 23% { --y: 23; } 24% { --y: 24; }
+  25% { --y: 25; } 26% { --y: 26; } 27% { --y: 27; } 28% { --y: 28; } 29% { --y: 29; }
+  30% { --y: 30; } 31% { --y: 31; } 32% { --y: 32; } 33% { --y: 33; } 34% { --y: 34; }
+  35% { --y: 35; } 36% { --y: 36; } 37% { --y: 37; } 38% { --y: 38; } 39% { --y: 39; }
+  40% { --y: 40; } 41% { --y: 41; } 42% { --y: 42; } 43% { --y: 43; } 44% { --y: 44; }
+  45% { --y: 45; } 46% { --y: 46; } 47% { --y: 47; } 48% { --y: 48; } 49% { --y: 49; }
+  50% { --y: 50; } 51% { --y: 51; } 52% { --y: 52; } 53% { --y: 53; } 54% { --y: 54; }
+  55% { --y: 55; } 56% { --y: 56; } 57% { --y: 57; } 58% { --y: 58; } 59% { --y: 59; }
+  60% { --y: 60; } 61% { --y: 61; } 62% { --y: 62; } 63% { --y: 63; } 64% { --y: 64; }
+  65% { --y: 65; } 66% { --y: 66; } 67% { --y: 67; } 68% { --y: 68; } 69% { --y: 69; }
+  70% { --y: 70; } 71% { --y: 71; } 72% { --y: 72; } 73% { --y: 73; } 74% { --y: 74; }
+  75% { --y: 75; } 76% { --y: 76; } 77% { --y: 77; } 78% { --y: 78; } 79% { --y: 79; }
+  80% { --y: 80; } 81% { --y: 81; } 82% { --y: 82; } 83% { --y: 83; } 84% { --y: 84; }
+  85% { --y: 85; } 86% { --y: 86; } 87% { --y: 87; } 88% { --y: 88; } 89% { --y: 89; }
+  90% { --y: 90; } 91% { --y: 91; } 92% { --y: 92; } 93% { --y: 93; } 94% { --y: 94; }
+  95% { --y: 95; } 96% { --y: 96; } 97% { --y: 97; } 98% { --y: 98; } 99% { --y: 99; }
+  100% { --y: 100; }
+}
+
+@keyframes maze-target {
+  from { transform: scale(0.4); opacity: 0.7; box-shadow: 0 0 5px var(--accent-primary); }
+  to { transform: scale(0.8); opacity: 1; box-shadow: 0 0 15px var(--accent-primary), 0 0 25px color-mix(in srgb, var(--accent-primary), transparent 50%); }
+}
+
+.maze-instructions {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  right: 10px;
+  text-align: center;
+  color: var(--text-primary);
+  background-color: rgba(0, 0, 0, 0.7);
+  padding: 8px;
+  border-radius: 5px;
+  font-size: 0.9rem;
+  z-index: 30;
+}
+
+@media (max-width: 768px) {
+  .maze-container {
+    height: 50vh;
+  }
+
+  .gameContainer {
+    left: calc(50% - 30vmin);
+    top: calc(50% - 30vmin);
+    width: 60vmin;
+  }
+}</code></pre>
+                    </div>
+                </div>
+
+                <div class="docs-block">
+                    <h3>Демонстрация</h3>
+                    <p class="paragraf">Прокручивайте область игры по горизонтали и вертикали, чтобы перемещать синий круг (игрока) по лабиринту. Вся игра полностью находится внутри этого контейнера примера, и не требует прокрутки всей страницы.</p>
+                    <div class="example-container">
+                        <div class="maze-container">
+                            <div class="maze-scrollable-area">
+                                <div id="mazeGameActual" class="gameContainer">
+                                    <div class="walls">
+                                        <div style="--_x: 1; --_y: 0;"></div><div style="--_x: 7; --_y: 0;"></div><div style="--_x: 1; --_y: 1;"></div><div style="--_x: 2; --_y: 1;"></div><div style="--_x: 4; --_y: 1;"></div><div style="--_x: 5; --_y: 1;"></div><div style="--_x: 7; --_y: 1;"></div><div style="--_x: 8; --_y: 1;"></div><div style="--_x: 5; --_y: 2;"></div><div style="--_x: 8; --_y: 2;"></div><div style="--_x: 0; --_y: 3;"></div><div style="--_x: 1; --_y: 3;"></div><div style="--_x: 3; --_y: 3;"></div><div style="--_x: 5; --_y: 3;"></div><div style="--_x: 6; --_y: 3;"></div><div style="--_x: 8; --_y: 3;"></div><div style="--_x: 1; --_y: 4;"></div><div style="--_x: 3; --_y: 4;"></div><div style="--_x: 4; --_y: 4;"></div><div style="--_x: 5; --_y: 4;"></div><div style="--_x: 5; --_y: 5;"></div><div style="--_x: 6; --_y: 5;"></div><div style="--_x: 7; --_y: 5;"></div><div style="--_x: 8; --_y: 5;"></div><div style="--_x: 0; --_y: 6;"></div><div style="--_x: 1; --_y: 6;"></div><div style="--_x: 2; --_y: 6;"></div><div style="--_x: 3; --_y: 6;"></div><div style="--_x: 8; --_y: 6;"></div><div style="--_x: 9; --_y: 6;"></div><div style="--_x: 1; --_y: 7;"></div><div style="--_x: 3; --_y: 7;"></div><div style="--_x: 4; --_y: 7;"></div><div style="--_x: 6; --_y: 7;"></div><div style="--_x: 6; --_y: 8;"></div><div style="--_x: 7; --_y: 8;"></div><div style="--_x: 8; --_y: 8;"></div><div style="--_x: 1; --_y: 9;"></div><div style="--_x: 2; --_y: 9;"></div><div style="--_x: 4; --_y: 9;"></div><div style="--_x: 8; --_y: 9;"></div>
+                                        <div class="target" style="--_x: 9; --_y: 9;"></div>
+                                    </div>
+                                    <div class="playerContainer">
+                                        <div class="player"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </section>
 
     </main>

@@ -12,7 +12,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const recipeNavLinks = document.querySelectorAll('.recipe-nav-link');
     const recipeExampleSections = document.querySelectorAll('.recipe-example-section');
 
-    const sectionsRequiringOverflowAuto = ['horizontal-scroll', 'parallax', 'svg-animation'];
+    const sectionsRequiringOverflowAuto = ['horizontal-scroll', 'parallax', 'svg-animation', 'carousel'];
 
     function updateContentWrapperOverflow(activeSectionId) {
         if (!contentWrapper) return;
